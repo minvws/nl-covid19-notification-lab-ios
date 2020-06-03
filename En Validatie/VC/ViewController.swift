@@ -40,17 +40,17 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate {
                 }
                 
                 if exposures.count > 0 && Server.shared.diagnosisKeys.count > 0 {
-                    
                     let scannedKey = Server.shared.diagnosisKeys[0]
-                    let exposure = exposures[0]
+                    
                     self.labelScores.text =
                         "Test id: \(scannedKey.testId) \n" +
                         "Device name: \(scannedKey.deviceId) \n" +
                         "Source device name: \(UIDevice.current.name) \n" +
-                        "Attenuation: \(exposure.attenuationValue) \n" +
-                        "Duration: \(exposure.attenuationDurations) \n" +
-                        "Transmission risk: \(exposure.transmissionRiskLevel) \n" +
-                        "Transmission risk score: \(exposure.totalRiskScore)"
+                        "Scanned TEK: \(scannedKey.keyData.base64EncodedString()) \n" +
+                        "Attenuation: \(exposures.map({ ($0.attenuationValue)})) \n" +
+                        "Duration: \(exposures.map({ ($0.attenuationDurations)})) \n" +
+                        "Transmission risk: \(exposures.map({ ($0.transmissionRiskLevel)})) \n" +
+                        "Transmission risk score: \(exposures.map({ ($0.totalRiskScore)}))"
                     
                     self.constraintShareHeight.constant = 50
                 } else {
@@ -59,9 +59,6 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate {
                 }
                 break;
             }
-            
-            
-
         }
     }
     

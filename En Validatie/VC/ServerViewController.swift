@@ -14,6 +14,7 @@ class ServerViewController: UIViewController, UITextFieldDelegate {
     @IBOutlet weak var buttonShare: UIButton!
     @IBOutlet weak var textFieldTestId: UITextField!
     @IBOutlet weak var labelDeviceName: UILabel!
+    @IBOutlet weak var labelTEK: UILabel!
     
     
     var keyValueObservers = [NSKeyValueObservation]()
@@ -53,6 +54,7 @@ class ServerViewController: UIViewController, UITextFieldDelegate {
                     let jsonData = try! JSONEncoder().encode(key)
                     let jsonString = String(data: jsonData, encoding: .utf8)
                     self.generateQrCode(code: jsonString!)
+                    self.labelTEK.text = keys[0].keyData.base64EncodedString()
                 } else {
                     self.showDialog(message: "You have \(keys.count) keys. Make sure you have 1 key")
                 }

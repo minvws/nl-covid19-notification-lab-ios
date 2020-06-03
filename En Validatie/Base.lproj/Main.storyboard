@@ -37,7 +37,7 @@
                                 <nil key="textColor"/>
                                 <nil key="highlightedColor"/>
                             </label>
-                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" textAlignment="natural" lineBreakMode="tailTruncation" numberOfLines="7" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="PpZ-KM-Wvx">
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" textAlignment="natural" lineBreakMode="tailTruncation" numberOfLines="9" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="PpZ-KM-Wvx">
                                 <rect key="frame" x="20" y="122" width="374" height="122"/>
                                 <string key="text">Test id:
 Device name:
@@ -118,7 +118,7 @@ Transmission risk score:</string>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <imageView clipsSubviews="YES" userInteractionEnabled="NO" tag="1" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="z36-PL-Io0">
-                                <rect key="frame" x="20" y="225" width="374" height="458"/>
+                                <rect key="frame" x="20" y="225" width="374" height="447.5"/>
                             </imageView>
                             <switch opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" contentHorizontalAlignment="center" contentVerticalAlignment="center" on="YES" translatesAutoresizingMaskIntoConstraints="NO" id="9CW-Tc-PYB">
                                 <rect key="frame" x="347" y="84" width="51" height="31"/>
@@ -166,12 +166,19 @@ Transmission risk score:</string>
                                 <nil key="textColor"/>
                                 <nil key="highlightedColor"/>
                             </label>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="   " textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="3LR-w2-ghT">
+                                <rect key="frame" x="20" y="682.5" width="374" height="20.5"/>
+                                <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                <nil key="textColor"/>
+                                <nil key="highlightedColor"/>
+                            </label>
                         </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                         <constraints>
                             <constraint firstItem="9CW-Tc-PYB" firstAttribute="top" secondItem="vIl-XJ-1iI" secondAttribute="top" constant="40" id="4Do-OO-Oi7"/>
                             <constraint firstItem="SJG-gU-pYT" firstAttribute="leading" secondItem="vIl-XJ-1iI" secondAttribute="leading" constant="20" id="6jM-pa-tAk"/>
-                            <constraint firstItem="zVT-5g-74Q" firstAttribute="top" secondItem="z36-PL-Io0" secondAttribute="bottom" constant="40" id="AKv-GQ-ybh"/>
+                            <constraint firstItem="zVT-5g-74Q" firstAttribute="top" secondItem="3LR-w2-ghT" secondAttribute="bottom" constant="20" id="AKv-GQ-ybh"/>
+                            <constraint firstItem="vIl-XJ-1iI" firstAttribute="trailing" secondItem="3LR-w2-ghT" secondAttribute="trailing" constant="20" id="G3q-Gn-2Ht"/>
                             <constraint firstItem="AAf-aY-GoX" firstAttribute="leading" secondItem="vIl-XJ-1iI" secondAttribute="leading" constant="20" id="Isi-at-4FR"/>
                             <constraint firstItem="SJG-gU-pYT" firstAttribute="top" secondItem="AAf-aY-GoX" secondAttribute="bottom" constant="20" id="JBu-BB-I8X"/>
                             <constraint firstItem="eUh-pO-2gA" firstAttribute="centerY" secondItem="9CW-Tc-PYB" secondAttribute="centerY" id="Pzu-Iq-9vu"/>
@@ -180,11 +187,13 @@ Transmission risk score:</string>
                             <constraint firstItem="vIl-XJ-1iI" firstAttribute="trailing" secondItem="9CW-Tc-PYB" secondAttribute="trailing" constant="18" id="eib-Ky-Kxu"/>
                             <constraint firstItem="vIl-XJ-1iI" firstAttribute="bottom" secondItem="zVT-5g-74Q" secondAttribute="bottom" constant="40" id="fdL-tr-cah"/>
                             <constraint firstItem="vIl-XJ-1iI" firstAttribute="trailing" secondItem="SJG-gU-pYT" secondAttribute="trailing" constant="20" id="gVs-IN-twD"/>
+                            <constraint firstItem="3LR-w2-ghT" firstAttribute="top" secondItem="z36-PL-Io0" secondAttribute="bottom" constant="10" id="ha4-Ph-tav"/>
                             <constraint firstItem="z36-PL-Io0" firstAttribute="top" secondItem="SJG-gU-pYT" secondAttribute="bottom" constant="20" id="k1T-fA-wbt"/>
                             <constraint firstItem="vIl-XJ-1iI" firstAttribute="trailing" secondItem="z36-PL-Io0" secondAttribute="trailing" constant="20" id="qct-6n-3QX"/>
                             <constraint firstItem="9CW-Tc-PYB" firstAttribute="leading" secondItem="eUh-pO-2gA" secondAttribute="trailing" constant="8" id="rZ4-hW-kO6"/>
                             <constraint firstItem="z36-PL-Io0" firstAttribute="leading" secondItem="vIl-XJ-1iI" secondAttribute="leading" constant="20" id="tqT-QR-Q9G"/>
                             <constraint firstItem="vIl-XJ-1iI" firstAttribute="trailing" secondItem="zVT-5g-74Q" secondAttribute="trailing" constant="20" id="ucI-ZR-SwL"/>
+                            <constraint firstItem="3LR-w2-ghT" firstAttribute="leading" secondItem="vIl-XJ-1iI" secondAttribute="leading" constant="20" id="v62-Pf-JDd"/>
                             <constraint firstItem="zVT-5g-74Q" firstAttribute="leading" secondItem="vIl-XJ-1iI" secondAttribute="leading" constant="20" id="vnB-Uv-M2r"/>
                             <constraint firstItem="vIl-XJ-1iI" firstAttribute="trailing" secondItem="AAf-aY-GoX" secondAttribute="trailing" constant="20" id="yBe-aC-T6Z"/>
                         </constraints>
@@ -196,6 +205,7 @@ Transmission risk score:</string>
                         <outlet property="buttonShare" destination="zVT-5g-74Q" id="n1L-1p-yVO"/>
                         <outlet property="imageViewQr" destination="z36-PL-Io0" id="4vr-Jd-Tiq"/>
                         <outlet property="labelDeviceName" destination="AAf-aY-GoX" id="9ng-mv-hmm"/>
+                        <outlet property="labelTEK" destination="3LR-w2-ghT" id="guR-79-vPY"/>
                         <outlet property="switchEN" destination="9CW-Tc-PYB" id="ApP-vt-dxF"/>
                         <outlet property="textFieldTestId" destination="SJG-gU-pYT" id="vXH-fq-nWU"/>
                     </connections>
