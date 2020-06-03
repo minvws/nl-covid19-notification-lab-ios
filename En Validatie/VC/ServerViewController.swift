@@ -10,6 +10,18 @@ import UIKit
 class ServerViewController: UIViewController {
     
     @IBOutlet weak var imageViewQr: UIImageView!
+    @IBOutlet weak var switchEN: UISwitch!
+    @IBOutlet weak var buttonShare: UIButton!
+    
+    var keyValueObservers = [NSKeyValueObservation]()
+    
+    required init?(coder: NSCoder) {
+        super.init(coder: coder)
+        
+        keyValueObservers.append(ExposureManager.shared.manager.observe(\.exposureNotificationStatus) { [unowned self] manager, change in
+            self.switchEN.isOn = ExposureManager.shared.manager.exposureNotificationEnabled
+        })
+    }
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -39,6 +51,17 @@ class ServerViewController: UIViewController {
         }
         
     }
+    
+    
+    @IBAction func switchChanged(_ sender: UISwitch) {
+        ExposureManager.shared.manager.setExposureNotificationEnabled(sender.isOn) { error in
+            if let error = error {
+                self.showDialog(message: "Error \(error)")
+                return
+            }
+        }
+    }
+    
     
     func showDialog(message:String) {
         let alert = UIAlertController(title: "Info", message: "", preferredStyle: .alert)

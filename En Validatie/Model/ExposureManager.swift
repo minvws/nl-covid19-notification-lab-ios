@@ -17,11 +17,7 @@ class ExposureManager {
     
     init() {
         manager.activate { _ in
-            if ENManager.authorizationStatus == .authorized && !self.manager.exposureNotificationEnabled {
-                self.manager.setExposureNotificationEnabled(true) { _ in
-                    // No error handling for attempts to enable on launch
-                }
-            }
+            
         }
     }
     

@@ -31,6 +31,7 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		D283B1002487B07900A904D9 /* Config.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; path = Config.xcconfig; sourceTree = "<group>"; };
 		D290F65A24814782007ECE7C /* Config.xcconfig */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xcconfig; path = Config.xcconfig; sourceTree = "<group>"; };
 		D290F65C248147A8007ECE7C /* LICENSE */ = {isa = PBXFileReference; lastKnownFileType = folder; path = LICENSE; sourceTree = "<group>"; };
 		D290F65E24814900007ECE7C /* README.md */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = net.daringfireball.markdown; path = README.md; sourceTree = "<group>"; };
@@ -92,6 +93,7 @@
 			isa = PBXGroup;
 			children = (
 				D290F65A24814782007ECE7C /* Config.xcconfig */,
+				D283B1002487B07900A904D9 /* Config.xcconfig */,
 				D2FD69D2247D85EF00BA7EA1 /* VC */,
 				D2FD69CB247D460F00BA7EA1 /* Model */,
 				D2FD69C4247D454A00BA7EA1 /* ExposureKeyData.pb.swift */,
