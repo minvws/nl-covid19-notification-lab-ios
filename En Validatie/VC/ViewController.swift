@@ -8,16 +8,17 @@
 import UIKit
 import ExposureNotification
 import CoreBluetooth
+import MessageUI
 
-class ViewController: UIViewController {
+class ViewController: UIViewController, MFMailComposeViewControllerDelegate {
     
     @IBOutlet weak var labelScores: UILabel!
+    @IBOutlet weak var constraintShareHeight: NSLayoutConstraint!
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        constraintShareHeight.constant = 0
         NotificationCenter.default.addObserver(self, selector: #selector(onScannedQR(_:)), name: Server.shared.$urls.notificationName, object: nil)
-//        centralManager = CBCentralManager(delegate: self, queue: nil)
-//        centralManager.scanForPeripherals(withServices: nil)
     }
     
     deinit {
@@ -35,17 +36,27 @@ class ViewController: UIViewController {
             case let .success(exposureinfo):
                 
                 guard let exposures = exposureinfo else {
-                    self.labelScores.text = "No exposures"
                     return
                 }
                 
-                let exposure = exposures[0]
-                self.labelScores.text = "Attenuation: \(exposure.attenuationValue) \n" +
-                "Duration: \(exposure.attenuationDurations) \n" +
-                "Transmission risk: \(exposure.transmissionRiskLevel) \n" +
-                "Transmission risk score: \(exposure.totalRiskScore)"
-                
-                
+                if exposures.count > 0 && Server.shared.diagnosisKeys.count > 0 {
+                    
+                    let scannedKey = Server.shared.diagnosisKeys[0]
+                    let exposure = exposures[0]
+                    self.labelScores.text =
+                        "Test id: \(scannedKey.testId) \n" +
+                        "Device name: \(scannedKey.deviceId) \n" +
+                        "Source device name: \(UIDevice.current.name) \n" +
+                        "Attenuation: \(exposure.attenuationValue) \n" +
+                        "Duration: \(exposure.attenuationDurations) \n" +
+                        "Transmission risk: \(exposure.transmissionRiskLevel) \n" +
+                        "Transmission risk score: \(exposure.totalRiskScore)"
+                    
+                    self.constraintShareHeight.constant = 50
+                } else {
+                    self.labelScores.text = "No exposure"
+                    self.constraintShareHeight.constant = 0
+                }
                 break;
             }
             
@@ -54,24 +65,39 @@ class ViewController: UIViewController {
         }
     }
     
-//    @IBAction func detectClick(_ sender: Any) {
-//        ExposureManager.shared.detectExposures { result in
-//
-//            var rssi = " Average RSSI (all in range devices): "
-//            for (_, value) in self.rssiDict {
-//                let avg = value.reduce(0, +) / value.count
-//                rssi.append("[\(avg)]")
-//            }
-//
-//            var string = String(describing: result)
-//            string.append(rssi)
-//            self.setStatus(text: string)
-//        }
-//    }
-//
+    func showDialog(message:String) {
+        let alert = UIAlertController(title: "Info", message: "", preferredStyle: .alert)
+        alert.addAction(UIAlertAction(title: "OK", style: .destructive, handler: nil))
+        alert.message = message
+        self.present(alert, animated: true, completion: nil)
+    }
+    
     @IBAction func scanQrClick(_ sender: Any) {
         self.present(ScannerViewController(), animated: true, completion: nil)
     }
+    
+    @IBAction func shareClick(_ sender: Any) {
+        if MFMailComposeViewController.canSendMail() {
+            
+            guard let body = self.labelScores.text else {
+                return
+            }
+            
+            let mail = MFMailComposeViewController()
+            mail.mailComposeDelegate = self
+            mail.setToRecipients(["..."])
+            mail.setMessageBody(body, isHTML: false)
+
+            present(mail, animated: true)
+        } else {
+            self.showDialog(message: "Mail not available")
+        }
+    }
+    
+    func mailComposeController(_ controller: MFMailComposeViewController, didFinishWith result: MFMailComposeResult, error: Error?) {
+        controller.dismiss(animated: true)
+    }
+    
 //
 //    func setStatus(text:String) {
 //        let formatter = DateFormatter()
