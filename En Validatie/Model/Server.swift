@@ -102,27 +102,16 @@ class Server {
     
     func getExposureConfiguration(completion: (Result<ENExposureConfiguration, Error>) -> Void) {
         
-        let dataFromServer = """
-        {"minimumRiskScore":0,
-        "attenuationDurationThresholds":[50, 70],
-        "attenuationLevelValues":[1, 2, 3, 4, 5, 6, 7, 8],
-        "daysSinceLastExposureLevelValues":[1, 2, 3, 4, 5, 6, 7, 8],
-        "durationLevelValues":[1, 2, 3, 4, 5, 6, 7, 8],
-        "transmissionRiskLevelValues":[1, 2, 3, 4, 5, 6, 7, 8]}
-        """.data(using: .utf8)!
+        let SEQUENTIAL_WEIGHTS :[NSNumber] = [1,2,3,4,5,6,7,8]
+        let EQUAL_WEIGHTS :[NSNumber] = [1,1,1,1,1,1,1,1]
         
-        do {
-            let codableExposureConfiguration = try JSONDecoder().decode(CodableExposureConfiguration.self, from: dataFromServer)
-            let exposureConfiguration = ENExposureConfiguration()
-            exposureConfiguration.minimumRiskScore = codableExposureConfiguration.minimumRiskScore
-            exposureConfiguration.attenuationLevelValues = codableExposureConfiguration.attenuationLevelValues as [NSNumber]
-            exposureConfiguration.daysSinceLastExposureLevelValues = codableExposureConfiguration.daysSinceLastExposureLevelValues as [NSNumber]
-            exposureConfiguration.durationLevelValues = codableExposureConfiguration.durationLevelValues as [NSNumber]
-            exposureConfiguration.transmissionRiskLevelValues = codableExposureConfiguration.transmissionRiskLevelValues as [NSNumber]
-            //exposureConfiguration.metadata = ["attenuationDurationThresholds": codableExposureConfiguration.attenuationDurationThresholds]
-            completion(.success(exposureConfiguration))
-        } catch {
-            completion(.failure(error))
-        }
+        let exposureConfiguration = ENExposureConfiguration()
+        exposureConfiguration.minimumRiskScore = 1
+        exposureConfiguration.attenuationLevelValues = EQUAL_WEIGHTS
+        exposureConfiguration.daysSinceLastExposureLevelValues = EQUAL_WEIGHTS
+        exposureConfiguration.durationLevelValues = EQUAL_WEIGHTS
+        exposureConfiguration.transmissionRiskLevelValues = EQUAL_WEIGHTS
+        exposureConfiguration.metadata = ["attenuationDurationThresholds": [42, 56]]
+        completion(.success(exposureConfiguration))
     }
 }

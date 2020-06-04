@@ -82,7 +82,6 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate {
             
             let mail = MFMailComposeViewController()
             mail.mailComposeDelegate = self
-            mail.setToRecipients(["..."])
             mail.setMessageBody(body, isHTML: false)
 
             present(mail, animated: true)
@@ -94,32 +93,5 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate {
     func mailComposeController(_ controller: MFMailComposeViewController, didFinishWith result: MFMailComposeResult, error: Error?) {
         controller.dismiss(animated: true)
     }
-    
-//
-//    func setStatus(text:String) {
-//        let formatter = DateFormatter()
-//        formatter.dateFormat = "dd-MM-yyyy HH:mm:ss"
-//        let date = formatter.string(from: Date())
-//        self.textViewStatus.text = "\(date) \n(\(text) \n\n" + self.textViewStatus.text
-//    }
-//
-//    var rssiDict: [String: [Int]] = [:]
-//    var centralManager: CBCentralManager!
-//
-//    func centralManagerDidUpdateState(_ central: CBCentralManager) {
-//        if(central.state == .poweredOn) {
-//            centralManager.scanForPeripherals(withServices: nil)
-//        }
-//    }
-//
-//    func centralManager(_ central: CBCentralManager, didDiscover peripheral: CBPeripheral, advertisementData: [String : Any], rssi RSSI: NSNumber) {
-//
-//        var list = rssiDict[peripheral.identifier.uuidString] ?? []
-//        if(list.count > 10) {
-//            list.remove(at: 0)
-//        }
-//        list.append(RSSI.intValue)
-//        rssiDict[peripheral.identifier.uuidString] = list
-//    }
 }
 
