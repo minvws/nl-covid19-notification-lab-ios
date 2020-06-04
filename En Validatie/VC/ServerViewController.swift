@@ -72,6 +72,7 @@ class ServerViewController: UIViewController, UITextFieldDelegate {
     @IBAction func switchChanged(_ sender: UISwitch) {
         ExposureManager.shared.manager.setExposureNotificationEnabled(sender.isOn) { error in
             if let error = error {
+                self.switchEN.isOn = ExposureManager.shared.manager.exposureNotificationEnabled
                 self.showDialog(message: "Error \(error)")
                 return
             }
