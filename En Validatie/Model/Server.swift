@@ -107,7 +107,7 @@ class Server {
         
         let exposureConfiguration = ENExposureConfiguration()
         exposureConfiguration.minimumRiskScore = 1
-        exposureConfiguration.attenuationLevelValues = EQUAL_WEIGHTS
+        exposureConfiguration.attenuationLevelValues = SEQUENTIAL_WEIGHTS
         exposureConfiguration.daysSinceLastExposureLevelValues = EQUAL_WEIGHTS
         exposureConfiguration.durationLevelValues = EQUAL_WEIGHTS
         exposureConfiguration.transmissionRiskLevelValues = EQUAL_WEIGHTS

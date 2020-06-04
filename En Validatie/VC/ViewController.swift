@@ -48,7 +48,8 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate {
                         "Source device name: \(scannedKey.deviceId) \n" +
                         "Scanned TEK: \(scannedKey.keyData.base64EncodedString()) \n" +
                         "Attenuation: \(exposures.map({ ($0.attenuationValue)})) \n" +
-                        "Duration: \(exposures.map({ ($0.attenuationDurations)})) \n" +
+                        "Attenuation Duration: \(exposures.map({ ($0.attenuationDurations)})) \n" +
+                        "Duration: \(exposures.map({ ($0.duration)})) \n" +
                         "Transmission risk: \(exposures.map({ ($0.transmissionRiskLevel)})) \n" +
                         "Transmission risk score: \(exposures.map({ ($0.totalRiskScore)}))"
                     
