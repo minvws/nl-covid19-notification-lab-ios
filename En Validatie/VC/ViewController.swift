@@ -44,8 +44,8 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate {
                     
                     self.labelScores.text =
                         "Test id: \(scannedKey.testId) \n" +
-                        "Device name: \(scannedKey.deviceId) \n" +
-                        "Source device name: \(UIDevice.current.name) \n" +
+                        "Device name: \(UIDevice.current.name) \n" +
+                        "Source device name: \(scannedKey.deviceId) \n" +
                         "Scanned TEK: \(scannedKey.keyData.base64EncodedString()) \n" +
                         "Attenuation: \(exposures.map({ ($0.attenuationValue)})) \n" +
                         "Duration: \(exposures.map({ ($0.attenuationDurations)})) \n" +
