@@ -7,11 +7,15 @@
 
 import UIKit
 
-class ServerViewController: UIViewController {
+class ServerViewController: UIViewController, UITextFieldDelegate {
     
     @IBOutlet weak var imageViewQr: UIImageView!
     @IBOutlet weak var switchEN: UISwitch!
     @IBOutlet weak var buttonShare: UIButton!
+    @IBOutlet weak var textFieldTestId: UITextField!
+    @IBOutlet weak var labelDeviceName: UILabel!
+    @IBOutlet weak var labelTEK: UILabel!
+    
     
     var keyValueObservers = [NSKeyValueObservation]()
     
@@ -25,9 +29,20 @@ class ServerViewController: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        textFieldTestId.delegate = self
+        labelDeviceName.text = UIDevice.current.name
     }
     
     @IBAction func generateQRCode(_ sender: Any) {
+        
+        guard let testId = textFieldTestId.text else {
+            return
+        }
+        
+        if(testId.isEmpty) {
+            self.showDialog(message: "Please enter a Test id")
+            return
+        }
         
         ExposureManager.shared.getAndPostDiagnosisKeys { result in
             switch(result) {
@@ -35,10 +50,11 @@ class ServerViewController: UIViewController {
             case let .success(keys):
                 if keys.count == 1 {
                     
-                    let key = CodableDiagnosisKey(keyData: keys[0].keyData, rollingPeriod: keys[0].rollingPeriod, rollingStartNumber: keys[0].rollingStartNumber, transmissionRiskLevel: keys[0].transmissionRiskLevel)
+                    let key = CodableDiagnosisKey(keyData: keys[0].keyData, rollingPeriod: keys[0].rollingPeriod, rollingStartNumber: keys[0].rollingStartNumber, transmissionRiskLevel: keys[0].transmissionRiskLevel, testId: testId, deviceId: UIDevice.current.name)
                     let jsonData = try! JSONEncoder().encode(key)
                     let jsonString = String(data: jsonData, encoding: .utf8)
                     self.generateQrCode(code: jsonString!)
+                    self.labelTEK.text = keys[0].keyData.base64EncodedString()
                 } else {
                     self.showDialog(message: "You have \(keys.count) keys. Make sure you have 1 key")
                 }
@@ -62,6 +78,10 @@ class ServerViewController: UIViewController {
         }
     }
     
+    func textFieldShouldReturn(_ textField: UITextField) -> Bool {
+        self.view.endEditing(true)
+        return false
+    }
     
     func showDialog(message:String) {
         let alert = UIAlertController(title: "Info", message: "", preferredStyle: .alert)
