@@ -9,7 +9,6 @@
 /* Begin PBXBuildFile section */
 		D26CCF3F247E945000E0231B /* AppCenterCrashes in Frameworks */ = {isa = PBXBuildFile; productRef = D26CCF3E247E945000E0231B /* AppCenterCrashes */; };
 		D26CCF41247E945000E0231B /* AppCenterAnalytics in Frameworks */ = {isa = PBXBuildFile; productRef = D26CCF40247E945000E0231B /* AppCenterAnalytics */; };
-		D290F65B24814782007ECE7C /* Config.xcconfig in Resources */ = {isa = PBXBuildFile; fileRef = D290F65A24814782007ECE7C /* Config.xcconfig */; };
 		D290F65D248147A8007ECE7C /* LICENSE in Resources */ = {isa = PBXBuildFile; fileRef = D290F65C248147A8007ECE7C /* LICENSE */; };
 		D290F65F24814900007ECE7C /* README.md in Resources */ = {isa = PBXBuildFile; fileRef = D290F65E24814900007ECE7C /* README.md */; };
 		D290F66124814BC2007ECE7C /* lab-test.jpg in Resources */ = {isa = PBXBuildFile; fileRef = D290F66024814BC2007ECE7C /* lab-test.jpg */; };
@@ -31,8 +30,6 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
-		D283B1002487B07900A904D9 /* Config.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; path = Config.xcconfig; sourceTree = "<group>"; };
-		D290F65A24814782007ECE7C /* Config.xcconfig */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xcconfig; path = Config.xcconfig; sourceTree = "<group>"; };
 		D290F65C248147A8007ECE7C /* LICENSE */ = {isa = PBXFileReference; lastKnownFileType = folder; path = LICENSE; sourceTree = "<group>"; };
 		D290F65E24814900007ECE7C /* README.md */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = net.daringfireball.markdown; path = README.md; sourceTree = "<group>"; };
 		D290F66024814BC2007ECE7C /* lab-test.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = "lab-test.jpg"; sourceTree = "<group>"; };
@@ -92,8 +89,6 @@
 		D2FD69AC247D445500BA7EA1 /* En Validatie */ = {
 			isa = PBXGroup;
 			children = (
-				D290F65A24814782007ECE7C /* Config.xcconfig */,
-				D283B1002487B07900A904D9 /* Config.xcconfig */,
 				D2FD69D2247D85EF00BA7EA1 /* VC */,
 				D2FD69CB247D460F00BA7EA1 /* Model */,
 				D2FD69C4247D454A00BA7EA1 /* ExposureKeyData.pb.swift */,
@@ -163,7 +158,7 @@
 			isa = PBXProject;
 			attributes = {
 				LastSwiftUpdateCheck = 1150;
-				LastUpgradeCheck = 1150;
+				LastUpgradeCheck = 1210;
 				ORGANIZATIONNAME = Rijksoverheid;
 				TargetAttributes = {
 					D2FD69A9247D445500BA7EA1 = {
@@ -199,7 +194,6 @@
 			buildActionMask = 2147483647;
 			files = (
 				D290F65F24814900007ECE7C /* README.md in Resources */,
-				D290F65B24814782007ECE7C /* Config.xcconfig in Resources */,
 				D2FD69BA247D445700BA7EA1 /* LaunchScreen.storyboard in Resources */,
 				D2FD69B7247D445700BA7EA1 /* Assets.xcassets in Resources */,
 				D2FD69B5247D445500BA7EA1 /* Main.storyboard in Resources */,
@@ -252,7 +246,6 @@
 /* Begin XCBuildConfiguration section */
 		D2FD69BC247D445700BA7EA1 /* Debug */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = D2B66A65248008730006755A /* Config.xcconfig */;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
 				CLANG_ANALYZER_NONNULL = YES;
@@ -277,6 +270,7 @@
 				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
 				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
 				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
 				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
 				CLANG_WARN_STRICT_PROTOTYPES = YES;
 				CLANG_WARN_SUSPICIOUS_MOVE = YES;
@@ -337,6 +331,7 @@
 				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
 				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
 				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
 				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
 				CLANG_WARN_STRICT_PROTOTYPES = YES;
 				CLANG_WARN_SUSPICIOUS_MOVE = YES;
@@ -367,7 +362,6 @@
 		};
 		D2FD69BF247D445700BA7EA1 /* Debug */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = D2B66A65248008730006755A /* Config.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_ENTITLEMENTS = "En Validatie/En Demo.entitlements";
