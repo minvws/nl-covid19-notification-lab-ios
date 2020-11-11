@@ -10,7 +10,7 @@ import ExposureNotification
 import CoreBluetooth
 import MessageUI
 
-class ViewController: UIViewController, MFMailComposeViewControllerDelegate {
+class ReceiverViewController: UIViewController, MFMailComposeViewControllerDelegate {
     
     @IBOutlet weak var labelScores: UILabel!
     @IBOutlet weak var constraintShareHeight: NSLayoutConstraint!
@@ -25,7 +25,7 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate {
         NotificationCenter.default.removeObserver(self, name: Server.shared.$urls.notificationName, object: nil)
     }
     
-    @objc func onScannedQR(_ notification:Notification) {
+    @objc func onScannedQR(_ notification: Notification) {
         ExposureManager.shared.detectExposures { result in
             
             switch(result) {

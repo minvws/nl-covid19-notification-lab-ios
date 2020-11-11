@@ -37,11 +37,16 @@ class Server {
     @Persisted(userDefaultsKey: "diagnosisKeys", notificationName: .init("ServerDiagnosisKeysDidChange"), defaultValue: [])
     var diagnosisKeys: [CodableDiagnosisKey]
     
-    func postDiagnosisKeys(_ keys: CodableDiagnosisKey, completion: (Error?) -> Void) {
+    
+    /// Stores the passed Diagnosiskey in local storage and generates and saves a binary and signature pair of files based on that locally stored diagnosis keys
+    /// - Parameters:
+    ///   - key: The key to be stored locally
+    ///   - completion: Called when actions are complete
+    func postDiagnosisKeys(_ key: CodableDiagnosisKey, completion: (Error?) -> Void) {
         
-        self.diagnosisKeys = [keys]
+        diagnosisKeys = [key]
         
-        self.downloadDiagnosisKeyFile { result in
+        downloadDiagnosisKeyFile { result in
             switch(result) {
             case let .success(urls):
                 self.urls = urls
@@ -53,50 +58,46 @@ class Server {
                 break;
             }
         }
-        
     }
     
-    // The URL passed to the completion is the local URL of the downloaded diagnosis key file
-    func downloadDiagnosisKeyFile(completion: (Result<[URL], Error>) -> Void) {
-        do {
-            let signatureInfo = SignatureInfo.with { signatureInfo in
-                signatureInfo.appBundleID = Bundle.main.bundleIdentifier!
-                signatureInfo.verificationKeyVersion = "v1"
-                signatureInfo.verificationKeyID = "310"
-                signatureInfo.signatureAlgorithm = "SHA256withECDSA"
-            }
-            
-            // In a real implementation, the file at remoteURL would be downloaded from a server
-            // This sample generates and saves a binary and signature pair of files based on the locally stored diagnosis keys
-            let export = TemporaryExposureKeyExport.with { export in
-                export.batchNum = 1
-                export.batchSize = 1
-                export.region = "310"
-                export.signatureInfos = [signatureInfo]
-                export.keys = diagnosisKeys.shuffled().map { diagnosisKey in
-                    TemporaryExposureKey.with { temporaryExposureKey in
-                        temporaryExposureKey.keyData = diagnosisKey.keyData
-                        temporaryExposureKey.transmissionRiskLevel = Int32(diagnosisKey.transmissionRiskLevel)
-                        temporaryExposureKey.rollingStartIntervalNumber = Int32(diagnosisKey.rollingStartNumber)
-                        temporaryExposureKey.rollingPeriod = Int32(diagnosisKey.rollingPeriod)
-                    }
+    /// Generates and saves a binary and signature pair of files based on `diagnosisKeys`
+    /// - Parameter completion: Called when action is completed, parameter contains the local URL of the downloaded diagnosis key file ('.bin') or an error when it failed
+    private func downloadDiagnosisKeyFile(completion: (Result<[URL], Error>) -> Void) {
+        
+        let signatureInfo = SignatureInfo.with { signatureInfo in
+            signatureInfo.appBundleID = Bundle.main.bundleIdentifier!
+            signatureInfo.verificationKeyVersion = "v1"
+            signatureInfo.verificationKeyID = "310"
+            signatureInfo.signatureAlgorithm = "SHA256withECDSA"
+        }
+        
+        // In a real implementation, the file at remoteURL would be downloaded from a server
+        // This sample generates and saves a binary and signature pair of files based on the locally stored diagnosis keys
+        let export = TemporaryExposureKeyExport.with { export in
+            export.batchNum = 1
+            export.batchSize = 1
+            export.region = "310"
+            export.signatureInfos = [signatureInfo]
+            export.keys = diagnosisKeys.shuffled().map { diagnosisKey in
+                TemporaryExposureKey.with { temporaryExposureKey in
+                    temporaryExposureKey.keyData = diagnosisKey.keyData
+                    temporaryExposureKey.transmissionRiskLevel = Int32(diagnosisKey.transmissionRiskLevel)
+                    temporaryExposureKey.rollingStartIntervalNumber = Int32(diagnosisKey.rollingStartNumber)
+                    temporaryExposureKey.rollingPeriod = Int32(diagnosisKey.rollingPeriod)
                 }
             }
-            
+        }
+        
+        do {
             let exportData = "EK Export v1    ".data(using: .utf8)! + (try export.serializedData())
             let cachesDirectory = FileManager.default.urls(for: .cachesDirectory, in: .userDomainMask).first!
             let localBinURL = cachesDirectory.appendingPathComponent(UUID().uuidString + ".bin")
+            
             try exportData.write(to: localBinURL)
             
             completion(.success([localBinURL]))
         } catch {
             completion(.failure(error))
-        }
-    }
-    
-    func deleteDiagnosisKeyFile(at localURLs: [URL]) throws {
-        for localURL in localURLs {
-            try FileManager.default.removeItem(at: localURL)
         }
     }
     

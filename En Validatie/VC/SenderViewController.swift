@@ -7,7 +7,7 @@
 
 import UIKit
 
-class ServerViewController: UIViewController, UITextFieldDelegate {
+class SenderViewController: UIViewController, UITextFieldDelegate {
     
     @IBOutlet weak var imageViewQr: UIImageView!
     @IBOutlet weak var switchEN: UISwitch!
@@ -16,8 +16,7 @@ class ServerViewController: UIViewController, UITextFieldDelegate {
     @IBOutlet weak var labelDeviceName: UILabel!
     @IBOutlet weak var labelTEK: UILabel!
     
-    
-    var keyValueObservers = [NSKeyValueObservation]()
+    private var keyValueObservers = [NSKeyValueObservation]()
     
     required init?(coder: NSCoder) {
         super.init(coder: coder)
@@ -35,46 +34,46 @@ class ServerViewController: UIViewController, UITextFieldDelegate {
     
     @IBAction func generateQRCode(_ sender: Any) {
         
-        guard let testId = textFieldTestId.text else {
+        guard let testId = textFieldTestId.text, !testId.isEmpty else {
+            showDialog(message: "Please enter a Test id")
             return
         }
-        
-        if(testId.isEmpty) {
-            self.showDialog(message: "Please enter a Test id")
-            return
-        }
-        
-        ExposureManager.shared.getAndPostDiagnosisKeys { result in
+                
+        ExposureManager.shared.getTestDiagnosisKeys { result in
             switch(result) {
                 
             case let .success(keys):
-                if keys.count == 1 {
-                    
-                    let key = CodableDiagnosisKey(keyData: keys[0].keyData, rollingPeriod: keys[0].rollingPeriod, rollingStartNumber: keys[0].rollingStartNumber, transmissionRiskLevel: keys[0].transmissionRiskLevel, testId: testId, deviceId: UIDevice.current.name)
-                    let jsonData = try! JSONEncoder().encode(key)
-                    let jsonString = String(data: jsonData, encoding: .utf8)
-                    self.generateQrCode(code: jsonString!)
-                    self.labelTEK.text = keys[0].keyData.base64EncodedString()
-                } else {
+                guard let firstKey = keys.first, keys.count == 1 else {
                     self.showDialog(message: "You have \(keys.count) keys. Make sure you have 1 key")
+                    return
                 }
-                break;
+                    
+                let key = CodableDiagnosisKey(
+                    keyData: firstKey.keyData,
+                    rollingPeriod: firstKey.rollingPeriod,
+                    rollingStartNumber: firstKey.rollingStartNumber,
+                    transmissionRiskLevel: firstKey.transmissionRiskLevel,
+                    testId: testId,
+                    deviceId: UIDevice.current.name
+                )
+                
+                let jsonData = try! JSONEncoder().encode(key)
+                let jsonString = String(data: jsonData, encoding: .utf8)
+                self.generateQrCode(code: jsonString!)
+                self.labelTEK.text = firstKey.keyData.base64EncodedString()
+                
             case let .failure(error):
                 print(error)
-                self.showDialog(message: "Error \(error)")
-                break;
+                self.showDialog(title: "Error", message: "\(error)")
             }
         }
-        
     }
-    
     
     @IBAction func switchChanged(_ sender: UISwitch) {
         ExposureManager.shared.manager.setExposureNotificationEnabled(sender.isOn) { error in
             if let error = error {
                 self.switchEN.isOn = ExposureManager.shared.manager.exposureNotificationEnabled
-                self.showDialog(message: "Error \(error)")
-                return
+                self.showDialog(title: "Error", message: "\(error)")
             }
         }
     }
@@ -84,14 +83,14 @@ class ServerViewController: UIViewController, UITextFieldDelegate {
         return false
     }
     
-    func showDialog(message:String) {
-        let alert = UIAlertController(title: "Info", message: "", preferredStyle: .alert)
+    private func showDialog(title: String = "Info", message: String) {
+        let alert = UIAlertController(title: title, message: "", preferredStyle: .alert)
         alert.addAction(UIAlertAction(title: "OK", style: .destructive, handler: nil))
         alert.message = message
-        self.present(alert, animated: true, completion: nil)
+        present(alert, animated: true, completion: nil)
     }
     
-    private func generateQrCode(code:String) {
+    private func generateQrCode(code: String) {
         let data = code.data(using: String.Encoding.ascii)
         
         if let filter = CIFilter(name: "CIQRCodeGenerator") {
@@ -99,7 +98,7 @@ class ServerViewController: UIViewController, UITextFieldDelegate {
             let transform = CGAffineTransform(scaleX: 10, y: 10)
             
             if let output = filter.outputImage?.transformed(by: transform) {
-                self.imageViewQr.image = UIImage(ciImage: output)
+                imageViewQr.image = UIImage(ciImage: output)
             }
         }
     }

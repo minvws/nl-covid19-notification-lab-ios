@@ -12,7 +12,7 @@
         <!--Client-->
         <scene sceneID="tne-QT-ifu">
             <objects>
-                <viewController title="Client" id="BYZ-38-t0r" customClass="ViewController" customModule="EN_Validatie" customModuleProvider="target" sceneMemberID="viewController">
+                <viewController title="Client" id="BYZ-38-t0r" customClass="ReceiverViewController" customModule="EN_Validatie" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="8bC-Xf-vdC">
                         <rect key="frame" x="0.0" y="0.0" width="414" height="896"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
@@ -107,7 +107,7 @@
         <!--Server-->
         <scene sceneID="Dtv-7G-dbC">
             <objects>
-                <viewController title="Server" id="n86-2P-iHb" customClass="ServerViewController" customModule="EN_Validatie" customModuleProvider="target" sceneMemberID="viewController">
+                <viewController title="Server" id="n86-2P-iHb" customClass="SenderViewController" customModule="EN_Validatie" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="Rb9-rr-snU">
                         <rect key="frame" x="0.0" y="0.0" width="414" height="896"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>

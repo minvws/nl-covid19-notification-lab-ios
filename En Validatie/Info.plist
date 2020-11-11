@@ -18,6 +18,10 @@
 	<string>$(MARKETING_VERSION)</string>
 	<key>CFBundleVersion</key>
 	<string>1</string>
+	<key>ENDeveloperRegion</key>
+	<string>TEST_NL_TEST</string>
+	<key>ENAPIVersion</key>
+	<integer>1</integer>
 	<key>LSRequiresIPhoneOS</key>
 	<true/>
 	<key>NSBluetoothAlwaysUsageDescription</key>

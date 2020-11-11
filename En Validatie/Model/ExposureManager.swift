@@ -63,7 +63,7 @@ class ExposureManager {
         }
     }
     
-    func getAndPostDiagnosisKeys(completion: @escaping (Result<[ENTemporaryExposureKey], Error>) -> Void) {
+    func getTestDiagnosisKeys(completion: @escaping (Result<[ENTemporaryExposureKey], Error>) -> Void) {
         manager.getTestDiagnosisKeys { temporaryExposureKeys, error in
             if let error = error {
                 completion(.failure(error))
