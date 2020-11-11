@@ -12,12 +12,14 @@ import MessageUI
 
 class ReceiverViewController: UIViewController, MFMailComposeViewControllerDelegate {
     
-    @IBOutlet weak var labelScores: UILabel!
-    @IBOutlet weak var constraintShareHeight: NSLayoutConstraint!
+//    @IBOutlet weak var labelScores: UILabel!    
+    @IBOutlet weak var tableView: UITableView!
+    
+    private var scannedKey: CodableDiagnosisKey?
+    private var exposureWindows = [ENExposureWindow]()
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        constraintShareHeight.constant = 0
         NotificationCenter.default.addObserver(self, selector: #selector(onScannedQR(_:)), name: Server.shared.$urls.notificationName, object: nil)
     }
     
@@ -31,39 +33,36 @@ class ReceiverViewController: UIViewController, MFMailComposeViewControllerDeleg
             switch(result) {
                 
             case let .failure(error):
-                self.labelScores.text = "Error \(error)"
-                break;
-            case let .success(exposureinfo):
+                self.scannedKey = nil
+                self.exposureWindows = []
+                self.showDialog(title: "Error", message: "\(error)")
                 
-                guard let exposures = exposureinfo else {
-                    return
-                }
+            case let .success(exposureWindows):
                 
-                if exposures.count > 0 && Server.shared.diagnosisKeys.count > 0 {
-                    let scannedKey = Server.shared.diagnosisKeys[0]
-                    
-                    self.labelScores.text =
-                        "Test id: \(scannedKey.testId) \n" +
-                        "Device name: \(UIDevice.current.name) \n" +
-                        "Source device name: \(scannedKey.deviceId) \n" +
-                        "Scanned TEK: \(scannedKey.keyData.base64EncodedString()) \n" +
-                        "Attenuation: \(exposures.map({ ($0.attenuationValue)})) \n" +
-                        "Attenuation Duration: \(exposures.map({ ($0.attenuationDurations)})) \n" +
-                        "Duration: \(exposures.map({ ($0.duration)})) \n" +
-                        "Transmission risk: \(exposures.map({ ($0.transmissionRiskLevel)})) \n" +
-                        "Transmission risk score: \(exposures.map({ ($0.totalRiskScore)}))"
-                    
-                    self.constraintShareHeight.constant = 50
-                } else {
-                    self.labelScores.text = "No exposure"
-                    self.constraintShareHeight.constant = 0
+                self.scannedKey = Server.shared.diagnosisKeys.first
+                self.exposureWindows = exposureWindows
+                
+                if self.exposureWindows.isEmpty {
+                    self.showDialog(message: "no exposure windows found")
                 }
-                break;
+                self.tableView.reloadData()
+                
+//                self.labelScores.text =
+//                    "Test id: \(scannedKey.testId) \n" +
+//                    "Device name: \(UIDevice.current.name) \n" +
+//                    "Source device name: \(scannedKey.deviceId) \n" +
+//                    "Scanned TEK: \(scannedKey.keyData.base64EncodedString()) \n" +
+//                    "Attenuation: \(exposures.map({ ($0.attenuationValue)})) \n" +
+//                    "Attenuation Duration: \(exposures.map({ ($0.attenuationDurations)})) \n" +
+//                    "Duration: \(exposures.map({ ($0.duration)})) \n" +
+//                    "Transmission risk: \(exposures.map({ ($0.transmissionRiskLevel)})) \n" +
+//                    "Transmission risk score: \(exposures.map({ ($0.totalRiskScore)}))"
+                
             }
         }
     }
     
-    func showDialog(message:String) {
+    func showDialog(title: String = "Info", message:String) {
         let alert = UIAlertController(title: "Info", message: "", preferredStyle: .alert)
         alert.addAction(UIAlertAction(title: "OK", style: .destructive, handler: nil))
         alert.message = message
@@ -75,20 +74,20 @@ class ReceiverViewController: UIViewController, MFMailComposeViewControllerDeleg
     }
     
     @IBAction func shareClick(_ sender: Any) {
-        if MFMailComposeViewController.canSendMail() {
-            
-            guard let body = self.labelScores.text else {
-                return
-            }
-            
-            let mail = MFMailComposeViewController()
-            mail.mailComposeDelegate = self
-            mail.setMessageBody(body, isHTML: false)
-
-            present(mail, animated: true)
-        } else {
-            self.showDialog(message: "Mail not available")
-        }
+//        if MFMailComposeViewController.canSendMail() {
+//
+//            guard let body = self.labelScores.text else {
+//                return
+//            }
+//
+//            let mail = MFMailComposeViewController()
+//            mail.mailComposeDelegate = self
+//            mail.setMessageBody(body, isHTML: false)
+//
+//            present(mail, animated: true)
+//        } else {
+//            self.showDialog(message: "Mail not available")
+//        }
     }
     
     func mailComposeController(_ controller: MFMailComposeViewController, didFinishWith result: MFMailComposeResult, error: Error?) {
@@ -96,3 +95,19 @@ class ReceiverViewController: UIViewController, MFMailComposeViewControllerDeleg
     }
 }
 
+extension ReceiverViewController: UITableViewDataSource {
+    func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+        return exposureWindows.count
+    }
+    
+    func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+        let window = exposureWindows[indexPath.row]
+        guard let cell = tableView.dequeueReusableCell(withIdentifier: "Cell") else {
+            return UITableViewCell()
+        }
+        
+        cell.textLabel?.text = "\(window.date) | \(window.infectiousness)"
+        
+        return cell
+    }
+}

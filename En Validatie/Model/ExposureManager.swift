@@ -25,7 +25,7 @@ class ExposureManager {
         manager.invalidate()
     }
     
-    func detectExposures(completion: @escaping (Result<[ENExposureInfo]?, Error>) -> Void) {
+    func detectExposures(completion: @escaping (Result<[ENExposureWindow], Error>) -> Void) {
         
         let urls = Server.shared.urls
         // get config
@@ -45,21 +45,32 @@ class ExposureManager {
         }
     }
     
-    private func detectExposures(configuration: ENExposureConfiguration, urls: [URL], completion: @escaping (Result<[ENExposureInfo]?, Error>) -> Void) {
+    private func detectExposures(configuration: ENExposureConfiguration, urls: [URL], completion: @escaping (Result<[ENExposureWindow], Error>) -> Void) {
+           
         ExposureManager.shared.manager.detectExposures(configuration: configuration, diagnosisKeyURLs: urls) { summary, error in
+            
             if let error = error {
                 completion(.failure(error))
                 return
             }
             
-            ExposureManager.shared.manager.getExposureInfo(summary: summary!, userExplanation: "") { (info, error) in
+            ExposureManager.shared.manager.getExposureWindows(summary: summary!) { (exposureWindows, error) in
                 if let error = error {
                     completion(.failure(error))
                     return
                 }
 
-                completion(.success(info))
+                completion(.success(exposureWindows ?? []))
             }
+            
+//            ExposureManager.shared.manager.getExposureInfo(summary: summary!, userExplanation: "") { (info, error) in
+//                if let error = error {
+//                    completion(.failure(error))
+//                    return
+//                }
+//
+//                completion(.success(info))
+//            }
         }
     }
     

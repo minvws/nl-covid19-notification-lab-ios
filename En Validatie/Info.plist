@@ -21,7 +21,7 @@
 	<key>ENDeveloperRegion</key>
 	<string>TEST_NL_TEST</string>
 	<key>ENAPIVersion</key>
-	<integer>1</integer>
+	<integer>2</integer>
 	<key>LSRequiresIPhoneOS</key>
 	<true/>
 	<key>NSBluetoothAlwaysUsageDescription</key>

@@ -105,14 +105,70 @@ class Server {
         
         let SEQUENTIAL_WEIGHTS :[NSNumber] = [1,2,3,4,5,6,7,8]
         let EQUAL_WEIGHTS :[NSNumber] = [1,1,1,1,1,1,1,1]
+  
+        // Apple demo app settings
+//        let exposureConfiguration = ENExposureConfiguration()
+//        exposureConfiguration.minimumRiskScore = 0
+//        exposureConfiguration.attenuationLevelValues = [1, 2, 3, 4, 5, 6, 7, 8]
+//        exposureConfiguration.daysSinceLastExposureLevelValues = [1, 2, 3, 4, 5, 6, 7, 8]
+//        exposureConfiguration.durationLevelValues = [1, 2, 3, 4, 5, 6, 7, 8]
+//        exposureConfiguration.transmissionRiskLevelValues = [1, 2, 3, 4, 5, 6, 7, 8]
+//        exposureConfiguration.metadata = ["attenuationDurationThresholds": [42, 56]]
         
         let exposureConfiguration = ENExposureConfiguration()
-        exposureConfiguration.minimumRiskScore = 1
+        exposureConfiguration.minimumRiskScore = 0
         exposureConfiguration.attenuationLevelValues = SEQUENTIAL_WEIGHTS
         exposureConfiguration.daysSinceLastExposureLevelValues = EQUAL_WEIGHTS
         exposureConfiguration.durationLevelValues = EQUAL_WEIGHTS
         exposureConfiguration.transmissionRiskLevelValues = EQUAL_WEIGHTS
         exposureConfiguration.metadata = ["attenuationDurationThresholds": [42, 56]]
+        
+        // api v2 specific configuration
+        exposureConfiguration.immediateDurationWeight = 100
+        exposureConfiguration.nearDurationWeight = 100
+        exposureConfiguration.mediumDurationWeight = 100
+        exposureConfiguration.otherDurationWeight = 100
+        
+        exposureConfiguration.infectiousnessStandardWeight = 100
+        exposureConfiguration.infectiousnessHighWeight = 100
+        
+        exposureConfiguration.reportTypeConfirmedTestWeight = 100
+        exposureConfiguration.reportTypeConfirmedClinicalDiagnosisWeight = 100
+        exposureConfiguration.reportTypeSelfReportedWeight = 100
+        exposureConfiguration.reportTypeRecursiveWeight = 100
+        
+        
+        exposureConfiguration.infectiousnessForDaysSinceOnsetOfSymptoms = [
+            -14: NSNumber(value: ENInfectiousness.high.rawValue),
+            -13: NSNumber(value: ENInfectiousness.high.rawValue),
+            -12: NSNumber(value: ENInfectiousness.high.rawValue),
+            -11: NSNumber(value: ENInfectiousness.high.rawValue),
+            -10: NSNumber(value: ENInfectiousness.high.rawValue),
+            -9: NSNumber(value: ENInfectiousness.high.rawValue),
+            -8: NSNumber(value: ENInfectiousness.high.rawValue),
+            -7: NSNumber(value: ENInfectiousness.high.rawValue),
+            -6: NSNumber(value: ENInfectiousness.high.rawValue),
+            -5: NSNumber(value: ENInfectiousness.high.rawValue),
+            -4: NSNumber(value: ENInfectiousness.high.rawValue),
+            -3: NSNumber(value: ENInfectiousness.high.rawValue),
+            -2: NSNumber(value: ENInfectiousness.high.rawValue),
+            -1: NSNumber(value: ENInfectiousness.high.rawValue),
+            0: NSNumber(value: ENInfectiousness.high.rawValue),
+            1: NSNumber(value: ENInfectiousness.high.rawValue),
+            2: NSNumber(value: ENInfectiousness.high.rawValue),
+            3: NSNumber(value: ENInfectiousness.high.rawValue),
+            4: NSNumber(value: ENInfectiousness.high.rawValue),
+            5: NSNumber(value: ENInfectiousness.high.rawValue),
+            6: NSNumber(value: ENInfectiousness.high.rawValue),
+            7: NSNumber(value: ENInfectiousness.high.rawValue),
+            8: NSNumber(value: ENInfectiousness.high.rawValue),
+            9: NSNumber(value: ENInfectiousness.high.rawValue),
+            10: NSNumber(value: ENInfectiousness.high.rawValue),
+            11: NSNumber(value: ENInfectiousness.high.rawValue),
+            12: NSNumber(value: ENInfectiousness.high.rawValue),
+            13: NSNumber(value: ENInfectiousness.high.rawValue),
+            14: NSNumber(value: ENInfectiousness.high.rawValue)
+        ]
         completion(.success(exposureConfiguration))
     }
 }
