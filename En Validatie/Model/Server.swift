@@ -18,21 +18,12 @@ struct CodableDiagnosisKey: Codable, Equatable {
     let deviceId:String
 }
 
-struct CodableExposureConfiguration: Codable {
-    let minimumRiskScore: ENRiskScore
-    let attenuationDurationThresholds: [Int]
-    let attenuationLevelValues: [ENRiskLevelValue]
-    let daysSinceLastExposureLevelValues: [ENRiskLevelValue]
-    let durationLevelValues: [ENRiskLevelValue]
-    let transmissionRiskLevelValues: [ENRiskLevelValue]
-}
-
 class Server {
     
     static let shared = Server()
-    
-    @Persisted(userDefaultsKey: "diagnosisFiles", notificationName: .init("DiagnosisFilesDidChange"), defaultValue: [])
-    var urls: [URL]
+        
+    @Persisted(userDefaultsKey: "diagnosisFiles", notificationName: .init("DiagnosisFilesDidChange"), defaultValue: nil)
+    var diagnosisKeyURL: URL?
     
     @Persisted(userDefaultsKey: "diagnosisKeys", notificationName: .init("ServerDiagnosisKeysDidChange"), defaultValue: [])
     var diagnosisKeys: [CodableDiagnosisKey]
@@ -48,8 +39,8 @@ class Server {
         
         downloadDiagnosisKeyFile { result in
             switch(result) {
-            case let .success(urls):
-                self.urls = urls
+            case let .success(url):
+                self.diagnosisKeyURL = url
                 completion(nil)
                 break;
             case let .failure(error):
@@ -62,81 +53,93 @@ class Server {
     
     /// Generates and saves a binary and signature pair of files based on `diagnosisKeys`
     /// - Parameter completion: Called when action is completed, parameter contains the local URL of the downloaded diagnosis key file ('.bin') or an error when it failed
-    private func downloadDiagnosisKeyFile(completion: (Result<[URL], Error>) -> Void) {
-        
-        let signatureInfo = SignatureInfo.with { signatureInfo in
-            signatureInfo.appBundleID = Bundle.main.bundleIdentifier!
-            signatureInfo.verificationKeyVersion = "v1"
-            signatureInfo.verificationKeyID = "310"
-            signatureInfo.signatureAlgorithm = "SHA256withECDSA"
-        }
-        
-        // In a real implementation, the file at remoteURL would be downloaded from a server
-        // This sample generates and saves a binary and signature pair of files based on the locally stored diagnosis keys
-        let export = TemporaryExposureKeyExport.with { export in
-            export.batchNum = 1
-            export.batchSize = 1
-            export.region = "310"
-            export.signatureInfos = [signatureInfo]
-            export.keys = diagnosisKeys.shuffled().map { diagnosisKey in
-                TemporaryExposureKey.with { temporaryExposureKey in
-                    temporaryExposureKey.keyData = diagnosisKey.keyData
-                    temporaryExposureKey.transmissionRiskLevel = Int32(diagnosisKey.transmissionRiskLevel)
-                    temporaryExposureKey.rollingStartIntervalNumber = Int32(diagnosisKey.rollingStartNumber)
-                    temporaryExposureKey.rollingPeriod = Int32(diagnosisKey.rollingPeriod)
-                }
-            }
-        }
+    private func downloadDiagnosisKeyFile(completion: (Result<URL, Error>) -> Void) {
         
         do {
-            let exportData = "EK Export v1    ".data(using: .utf8)! + (try export.serializedData())
+                        
+            let signatureInfo = SignatureInfo.with { signatureInfo in
+                signatureInfo.appBundleID = Bundle.main.bundleIdentifier!
+                signatureInfo.verificationKeyVersion = "v1"
+                signatureInfo.verificationKeyID = "310"
+                signatureInfo.signatureAlgorithm = "SHA256withECDSA"
+            }
+            
+            // In a real implementation, the file at remoteURL would be downloaded from a server
+            // This sample generates and saves a binary and signature pair of files based on the locally stored diagnosis keys
+            let export = TemporaryExposureKeyExport.with { export in
+                export.batchNum = 1
+                export.batchSize = 1
+                export.region = "310"
+                export.signatureInfos = [signatureInfo]
+                export.keys = diagnosisKeys.shuffled().map { diagnosisKey in
+                    TemporaryExposureKey.with { temporaryExposureKey in
+                        temporaryExposureKey.keyData = diagnosisKey.keyData
+                        temporaryExposureKey.transmissionRiskLevel = Int32(diagnosisKey.transmissionRiskLevel)
+                        temporaryExposureKey.rollingStartIntervalNumber = Int32(diagnosisKey.rollingStartNumber)
+                        temporaryExposureKey.rollingPeriod = Int32(diagnosisKey.rollingPeriod)
+                    }
+                }
+            }
+            
+            let exportData = "EK Export v1    ".data(using: .utf8)! + (try! export.serializedData())
+            
             let cachesDirectory = FileManager.default.urls(for: .cachesDirectory, in: .userDomainMask).first!
-            let localBinURL = cachesDirectory.appendingPathComponent(UUID().uuidString + ".bin")
             
+            let uuid = UUID().uuidString
+            let localBinURL = cachesDirectory.appendingPathComponent(uuid + ".bin")
             try exportData.write(to: localBinURL)
-            
-            completion(.success([localBinURL]))
+                        
+            completion(.success(localBinURL))
         } catch {
             completion(.failure(error))
         }
+        
+        
     }
     
     func getExposureConfiguration(completion: (Result<ENExposureConfiguration, Error>) -> Void) {
         
         let SEQUENTIAL_WEIGHTS :[NSNumber] = [1,2,3,4,5,6,7,8]
         let EQUAL_WEIGHTS :[NSNumber] = [1,1,1,1,1,1,1,1]
-  
+        
         // Apple demo app settings
+                let exposureConfiguration = ENExposureConfiguration()
+                exposureConfiguration.minimumRiskScore = 0
+                exposureConfiguration.attenuationLevelValues = [1, 2, 3, 4, 5, 6, 7, 8]
+                exposureConfiguration.daysSinceLastExposureLevelValues = [1, 2, 3, 4, 5, 6, 7, 8]
+                exposureConfiguration.durationLevelValues = [1, 2, 3, 4, 5, 6, 7, 8]
+                exposureConfiguration.transmissionRiskLevelValues = [1, 2, 3, 4, 5, 6, 7, 8]
+                exposureConfiguration.metadata = ["attenuationDurationThresholds": [42, 56]]
+        
 //        let exposureConfiguration = ENExposureConfiguration()
-//        exposureConfiguration.minimumRiskScore = 0
-//        exposureConfiguration.attenuationLevelValues = [1, 2, 3, 4, 5, 6, 7, 8]
-//        exposureConfiguration.daysSinceLastExposureLevelValues = [1, 2, 3, 4, 5, 6, 7, 8]
-//        exposureConfiguration.durationLevelValues = [1, 2, 3, 4, 5, 6, 7, 8]
-//        exposureConfiguration.transmissionRiskLevelValues = [1, 2, 3, 4, 5, 6, 7, 8]
+//        exposureConfiguration.minimumRiskScore = 1
+//        exposureConfiguration.attenuationLevelValues = SEQUENTIAL_WEIGHTS
+//        exposureConfiguration.daysSinceLastExposureLevelValues = EQUAL_WEIGHTS
+//        exposureConfiguration.durationLevelValues = EQUAL_WEIGHTS
+//        exposureConfiguration.transmissionRiskLevelValues = EQUAL_WEIGHTS
 //        exposureConfiguration.metadata = ["attenuationDurationThresholds": [42, 56]]
         
-        let exposureConfiguration = ENExposureConfiguration()
-        exposureConfiguration.minimumRiskScore = 0
-        exposureConfiguration.attenuationLevelValues = SEQUENTIAL_WEIGHTS
-        exposureConfiguration.daysSinceLastExposureLevelValues = EQUAL_WEIGHTS
-        exposureConfiguration.durationLevelValues = EQUAL_WEIGHTS
-        exposureConfiguration.transmissionRiskLevelValues = EQUAL_WEIGHTS
-        exposureConfiguration.metadata = ["attenuationDurationThresholds": [42, 56]]
+        // Stolen from NHS app (All marked as "unused" in the framework)
+        //        exposureConfiguration.transmissionRiskWeight = 100
+        //        exposureConfiguration.durationWeight = 100
+        //        exposureConfiguration.attenuationWeight = 100
+        //        exposureConfiguration.daysSinceLastExposureWeight = 100
         
         // api v2 specific configuration
-        exposureConfiguration.immediateDurationWeight = 100
-        exposureConfiguration.nearDurationWeight = 100
-        exposureConfiguration.mediumDurationWeight = 100
-        exposureConfiguration.otherDurationWeight = 100
-        
-        exposureConfiguration.infectiousnessStandardWeight = 100
-        exposureConfiguration.infectiousnessHighWeight = 100
-        
-        exposureConfiguration.reportTypeConfirmedTestWeight = 100
-        exposureConfiguration.reportTypeConfirmedClinicalDiagnosisWeight = 100
-        exposureConfiguration.reportTypeSelfReportedWeight = 100
-        exposureConfiguration.reportTypeRecursiveWeight = 100
-        
+//        exposureConfiguration.immediateDurationWeight = 100
+//        exposureConfiguration.nearDurationWeight = 100
+//        exposureConfiguration.mediumDurationWeight = 100
+//        exposureConfiguration.otherDurationWeight = 100
+//        
+//        exposureConfiguration.infectiousnessStandardWeight = 100
+//        exposureConfiguration.infectiousnessHighWeight = 100
+//        
+//        exposureConfiguration.reportTypeConfirmedTestWeight = 100
+//        exposureConfiguration.reportTypeConfirmedClinicalDiagnosisWeight = 100
+//        exposureConfiguration.reportTypeSelfReportedWeight = 100
+//        exposureConfiguration.reportTypeRecursiveWeight = 100
+//        
+//        exposureConfiguration.reportTypeNoneMap = .confirmedTest
         
         exposureConfiguration.infectiousnessForDaysSinceOnsetOfSymptoms = [
             -14: NSNumber(value: ENInfectiousness.high.rawValue),

@@ -27,7 +27,10 @@ class ExposureManager {
     
     func detectExposures(completion: @escaping (Result<[ENExposureWindow], Error>) -> Void) {
         
-        let urls = Server.shared.urls
+        guard let diagnosisKeyURL = Server.shared.diagnosisKeyURL else {
+            return
+        }
+        
         // get config
         Server.shared.getExposureConfiguration { result in
             
@@ -35,7 +38,7 @@ class ExposureManager {
             case let .success(configuration):
                 
                 // detect exposures based on downloaded keys and configuration
-                self.detectExposures(configuration: configuration, urls: urls, completion: completion)
+                self.detectExposures(configuration: configuration, diagnosisKeyURL: diagnosisKeyURL, completion: completion)
                 break;
             case let .failure(error):
                 completion(.failure(error))
@@ -45,9 +48,15 @@ class ExposureManager {
         }
     }
     
-    private func detectExposures(configuration: ENExposureConfiguration, urls: [URL], completion: @escaping (Result<[ENExposureWindow], Error>) -> Void) {
+    
+    /// Detects exposures to affected persons based on an exposure configuration and a url to a stored diagnosisKey
+    /// - Parameters:
+    ///   - configuration: Configuration of exposure detection
+    ///   - diagnosisKeyURL: URL to a locally stored diagnosiskey
+    ///   - completion: <#completion description#>
+    private func detectExposures(configuration: ENExposureConfiguration, diagnosisKeyURL: URL, completion: @escaping (Result<[ENExposureWindow], Error>) -> Void) {
            
-        ExposureManager.shared.manager.detectExposures(configuration: configuration, diagnosisKeyURLs: urls) { summary, error in
+        ExposureManager.shared.manager.detectExposures(configuration: configuration, diagnosisKeyURLs: [diagnosisKeyURL]) { summary, error in
             
             if let error = error {
                 completion(.failure(error))
@@ -63,6 +72,7 @@ class ExposureManager {
                 completion(.success(exposureWindows ?? []))
             }
             
+            // v1 api code
 //            ExposureManager.shared.manager.getExposureInfo(summary: summary!, userExplanation: "") { (info, error) in
 //                if let error = error {
 //                    completion(.failure(error))
@@ -79,10 +89,7 @@ class ExposureManager {
             if let error = error {
                 completion(.failure(error))
             } else {
-                guard let keys = temporaryExposureKeys else {
-                    return
-                }
-                completion(.success(keys))
+                completion(.success(temporaryExposureKeys ?? []))
             }
         }
     }

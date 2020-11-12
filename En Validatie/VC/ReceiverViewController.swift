@@ -20,11 +20,11 @@ class ReceiverViewController: UIViewController, MFMailComposeViewControllerDeleg
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        NotificationCenter.default.addObserver(self, selector: #selector(onScannedQR(_:)), name: Server.shared.$urls.notificationName, object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(onScannedQR(_:)), name: Server.shared.$diagnosisKeyURL.notificationName, object: nil)
     }
     
     deinit {
-        NotificationCenter.default.removeObserver(self, name: Server.shared.$urls.notificationName, object: nil)
+        NotificationCenter.default.removeObserver(self, name: Server.shared.$diagnosisKeyURL.notificationName, object: nil)
     }
     
     @objc func onScannedQR(_ notification: Notification) {
