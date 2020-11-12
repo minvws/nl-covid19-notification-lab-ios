@@ -58,6 +58,8 @@ class ExposureManager {
            
         ExposureManager.shared.manager.detectExposures(configuration: configuration, diagnosisKeyURLs: [diagnosisKeyURL]) { summary, error in
             
+            // For some reason `summary` is always empty when using the v2 API
+            
             if let error = error {
                 completion(.failure(error))
                 return
