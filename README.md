@@ -11,16 +11,6 @@ Keep in mind that the Apple Exposure Notification API is only accessible by veri
 authorities. Other devices trying to access the API using the code in this repository will fail
 to do so.
 
-## Instructions
-
-Please create a file called `Config.xcconfig` with the following content to build this project:
-
-
-`APPCENTER_API_KEY = Your key`
-
-
-Microsoft App Center being used for statistics and crash logging for this lab test only!
-
 
 ## Impression of experiment
 ![Performing an experiment on a field using two phones](lab-test.jpg)

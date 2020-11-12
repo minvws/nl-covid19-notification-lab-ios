@@ -2,24 +2,6 @@
   "object": {
     "pins": [
       {
-        "package": "App Center",
-        "repositoryURL": "https://github.com/microsoft/appcenter-sdk-apple",
-        "state": {
-          "branch": null,
-          "revision": "0daf878bbb2942261eeb54b7af0722f8c1434a2a",
-          "version": "3.2.0"
-        }
-      },
-      {
-        "package": "PLCrashReporter",
-        "repositoryURL": "https://github.com/microsoft/plcrashreporter.git",
-        "state": {
-          "branch": null,
-          "revision": "e45813d869f10beaaa2b2af88f9c5492d711feed",
-          "version": "1.6.0"
-        }
-      },
-      {
         "package": "SwiftProtobuf",
         "repositoryURL": "https://github.com/apple/swift-protobuf/",
         "state": {

@@ -66,8 +66,6 @@
 		<string>UIInterfaceOrientationLandscapeLeft</string>
 		<string>UIInterfaceOrientationLandscapeRight</string>
 	</array>
-	<key>APPCENTER_API_KEY</key>
-	<string>$(APPCENTER_API_KEY)</string>
 	<key>UIUserInterfaceStyle</key>
 	<string>Light</string>
 </dict>

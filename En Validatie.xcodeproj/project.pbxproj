@@ -7,8 +7,6 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		D26CCF3F247E945000E0231B /* AppCenterCrashes in Frameworks */ = {isa = PBXBuildFile; productRef = D26CCF3E247E945000E0231B /* AppCenterCrashes */; };
-		D26CCF41247E945000E0231B /* AppCenterAnalytics in Frameworks */ = {isa = PBXBuildFile; productRef = D26CCF40247E945000E0231B /* AppCenterAnalytics */; };
 		D290F65D248147A8007ECE7C /* LICENSE in Resources */ = {isa = PBXBuildFile; fileRef = D290F65C248147A8007ECE7C /* LICENSE */; };
 		D290F65F24814900007ECE7C /* README.md in Resources */ = {isa = PBXBuildFile; fileRef = D290F65E24814900007ECE7C /* README.md */; };
 		D290F66124814BC2007ECE7C /* lab-test.jpg in Resources */ = {isa = PBXBuildFile; fileRef = D290F66024814BC2007ECE7C /* lab-test.jpg */; };
@@ -33,7 +31,6 @@
 		D290F65C248147A8007ECE7C /* LICENSE */ = {isa = PBXFileReference; lastKnownFileType = folder; path = LICENSE; sourceTree = "<group>"; };
 		D290F65E24814900007ECE7C /* README.md */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = net.daringfireball.markdown; path = README.md; sourceTree = "<group>"; };
 		D290F66024814BC2007ECE7C /* lab-test.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = "lab-test.jpg"; sourceTree = "<group>"; };
-		D2B66A65248008730006755A /* Config.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; path = Config.xcconfig; sourceTree = "<group>"; };
 		D2B66A66248009690006755A /* Config.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Config.swift; sourceTree = "<group>"; };
 		D2FD69AA247D445500BA7EA1 /* EN Validatie.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "EN Validatie.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		D2FD69AD247D445500BA7EA1 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
@@ -57,9 +54,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				D26CCF41247E945000E0231B /* AppCenterAnalytics in Frameworks */,
 				D2FD69CA247D45A100BA7EA1 /* SwiftProtobufPluginLibrary in Frameworks */,
-				D26CCF3F247E945000E0231B /* AppCenterCrashes in Frameworks */,
 				D2FD69C8247D45A100BA7EA1 /* SwiftProtobuf in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -99,7 +94,6 @@
 				D2FD69B6247D445700BA7EA1 /* Assets.xcassets */,
 				D2FD69B8247D445700BA7EA1 /* LaunchScreen.storyboard */,
 				D2FD69BB247D445700BA7EA1 /* Info.plist */,
-				D2B66A65248008730006755A /* Config.xcconfig */,
 				D2B66A66248009690006755A /* Config.swift */,
 			);
 			path = "En Validatie";
@@ -144,8 +138,6 @@
 			packageProductDependencies = (
 				D2FD69C7247D45A100BA7EA1 /* SwiftProtobuf */,
 				D2FD69C9247D45A100BA7EA1 /* SwiftProtobufPluginLibrary */,
-				D26CCF3E247E945000E0231B /* AppCenterCrashes */,
-				D26CCF40247E945000E0231B /* AppCenterAnalytics */,
 			);
 			productName = "En Validatie";
 			productReference = D2FD69AA247D445500BA7EA1 /* EN Validatie.app */;
@@ -177,7 +169,6 @@
 			mainGroup = D2FD69A1247D445500BA7EA1;
 			packageReferences = (
 				D2FD69C6247D45A100BA7EA1 /* XCRemoteSwiftPackageReference "swift-protobuf" */,
-				D26CCF3D247E945000E0231B /* XCRemoteSwiftPackageReference "appcenter-sdk-apple" */,
 			);
 			productRefGroup = D2FD69AB247D445500BA7EA1 /* Products */;
 			projectDirPath = "";
@@ -428,14 +419,6 @@
 /* End XCConfigurationList section */
 
 /* Begin XCRemoteSwiftPackageReference section */
-		D26CCF3D247E945000E0231B /* XCRemoteSwiftPackageReference "appcenter-sdk-apple" */ = {
-			isa = XCRemoteSwiftPackageReference;
-			repositoryURL = "https://github.com/microsoft/appcenter-sdk-apple";
-			requirement = {
-				kind = upToNextMajorVersion;
-				minimumVersion = 3.2.0;
-			};
-		};
 		D2FD69C6247D45A100BA7EA1 /* XCRemoteSwiftPackageReference "swift-protobuf" */ = {
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/apple/swift-protobuf/";
@@ -447,16 +430,6 @@
 /* End XCRemoteSwiftPackageReference section */
 
 /* Begin XCSwiftPackageProductDependency section */
-		D26CCF3E247E945000E0231B /* AppCenterCrashes */ = {
-			isa = XCSwiftPackageProductDependency;
-			package = D26CCF3D247E945000E0231B /* XCRemoteSwiftPackageReference "appcenter-sdk-apple" */;
-			productName = AppCenterCrashes;
-		};
-		D26CCF40247E945000E0231B /* AppCenterAnalytics */ = {
-			isa = XCSwiftPackageProductDependency;
-			package = D26CCF3D247E945000E0231B /* XCRemoteSwiftPackageReference "appcenter-sdk-apple" */;
-			productName = AppCenterAnalytics;
-		};
 		D2FD69C7247D45A100BA7EA1 /* SwiftProtobuf */ = {
 			isa = XCSwiftPackageProductDependency;
 			package = D2FD69C6247D45A100BA7EA1 /* XCRemoteSwiftPackageReference "swift-protobuf" */;

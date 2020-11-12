@@ -15,11 +15,4 @@ public enum Config {
     }
     return dict
   }()
-
-  static let appCenterApiKey: String = {
-    guard let apiKey = Config.infoDictionary["APPCENTER_API_KEY"] as? String else {
-      fatalError("Not set")
-    }
-    return apiKey
-  }()
 }
