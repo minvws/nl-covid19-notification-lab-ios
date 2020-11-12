@@ -98,49 +98,31 @@ class Server {
     }
     
     func getExposureConfiguration(completion: (Result<ENExposureConfiguration, Error>) -> Void) {
+        let SEQUENTIAL_WEIGHTS :[NSNumber] = [1,2,3,4,5,6,7,8]
+        let EQUAL_WEIGHTS :[NSNumber] = [1,1,1,1,1,1,1,1]
+        
+        let exposureConfiguration = ENExposureConfiguration()
+        exposureConfiguration.minimumRiskScore = 1
+        exposureConfiguration.attenuationLevelValues = SEQUENTIAL_WEIGHTS
+        exposureConfiguration.daysSinceLastExposureLevelValues = EQUAL_WEIGHTS
+        exposureConfiguration.durationLevelValues = EQUAL_WEIGHTS
+        exposureConfiguration.transmissionRiskLevelValues = EQUAL_WEIGHTS
+        exposureConfiguration.metadata = ["attenuationDurationThresholds": [42, 56]]
+        completion(.success(exposureConfiguration))
+    }
+    
+    func getV2ExposureConfiguration(completion: (Result<ENExposureConfiguration, Error>) -> Void) {
         
         let SEQUENTIAL_WEIGHTS :[NSNumber] = [1,2,3,4,5,6,7,8]
         let EQUAL_WEIGHTS :[NSNumber] = [1,1,1,1,1,1,1,1]
         
-        // Apple demo app settings
-                let exposureConfiguration = ENExposureConfiguration()
-                exposureConfiguration.minimumRiskScore = 0
-                exposureConfiguration.attenuationLevelValues = [1, 2, 3, 4, 5, 6, 7, 8]
-                exposureConfiguration.daysSinceLastExposureLevelValues = [1, 2, 3, 4, 5, 6, 7, 8]
-                exposureConfiguration.durationLevelValues = [1, 2, 3, 4, 5, 6, 7, 8]
-                exposureConfiguration.transmissionRiskLevelValues = [1, 2, 3, 4, 5, 6, 7, 8]
-                exposureConfiguration.metadata = ["attenuationDurationThresholds": [42, 56]]
-        
-//        let exposureConfiguration = ENExposureConfiguration()
-//        exposureConfiguration.minimumRiskScore = 1
-//        exposureConfiguration.attenuationLevelValues = SEQUENTIAL_WEIGHTS
-//        exposureConfiguration.daysSinceLastExposureLevelValues = EQUAL_WEIGHTS
-//        exposureConfiguration.durationLevelValues = EQUAL_WEIGHTS
-//        exposureConfiguration.transmissionRiskLevelValues = EQUAL_WEIGHTS
-//        exposureConfiguration.metadata = ["attenuationDurationThresholds": [42, 56]]
-        
-        // Stolen from NHS app (All marked as "unused" in the framework)
-        //        exposureConfiguration.transmissionRiskWeight = 100
-        //        exposureConfiguration.durationWeight = 100
-        //        exposureConfiguration.attenuationWeight = 100
-        //        exposureConfiguration.daysSinceLastExposureWeight = 100
-        
-        // api v2 specific configuration
-//        exposureConfiguration.immediateDurationWeight = 100
-//        exposureConfiguration.nearDurationWeight = 100
-//        exposureConfiguration.mediumDurationWeight = 100
-//        exposureConfiguration.otherDurationWeight = 100
-//        
-//        exposureConfiguration.infectiousnessStandardWeight = 100
-//        exposureConfiguration.infectiousnessHighWeight = 100
-//        
-//        exposureConfiguration.reportTypeConfirmedTestWeight = 100
-//        exposureConfiguration.reportTypeConfirmedClinicalDiagnosisWeight = 100
-//        exposureConfiguration.reportTypeSelfReportedWeight = 100
-//        exposureConfiguration.reportTypeRecursiveWeight = 100
-//        
-//        exposureConfiguration.reportTypeNoneMap = .confirmedTest
-        
+        let exposureConfiguration = ENExposureConfiguration()
+        exposureConfiguration.minimumRiskScore = 1
+        exposureConfiguration.attenuationLevelValues = SEQUENTIAL_WEIGHTS
+        exposureConfiguration.daysSinceLastExposureLevelValues = EQUAL_WEIGHTS
+        exposureConfiguration.durationLevelValues = EQUAL_WEIGHTS
+        exposureConfiguration.transmissionRiskLevelValues = EQUAL_WEIGHTS
+        exposureConfiguration.metadata = ["attenuationDurationThresholds": [42, 56]]
         exposureConfiguration.infectiousnessForDaysSinceOnsetOfSymptoms = [
             -14: NSNumber(value: ENInfectiousness.high.rawValue),
             -13: NSNumber(value: ENInfectiousness.high.rawValue),
@@ -172,6 +154,23 @@ class Server {
             13: NSNumber(value: ENInfectiousness.high.rawValue),
             14: NSNumber(value: ENInfectiousness.high.rawValue)
         ]
+        
         completion(.success(exposureConfiguration))
+
+        // We tried setting the following properties too but it had no effect
+//        exposureConfiguration.immediateDurationWeight = 100
+//        exposureConfiguration.nearDurationWeight = 100
+//        exposureConfiguration.mediumDurationWeight = 100
+//        exposureConfiguration.otherDurationWeight = 100
+//        
+//        exposureConfiguration.infectiousnessStandardWeight = 100
+//        exposureConfiguration.infectiousnessHighWeight = 100
+//        
+//        exposureConfiguration.reportTypeConfirmedTestWeight = 100
+//        exposureConfiguration.reportTypeConfirmedClinicalDiagnosisWeight = 100
+//        exposureConfiguration.reportTypeSelfReportedWeight = 100
+//        exposureConfiguration.reportTypeRecursiveWeight = 100
+//        
+//        exposureConfiguration.reportTypeNoneMap = .confirmedTest
     }
 }

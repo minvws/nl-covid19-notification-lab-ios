@@ -32,7 +32,7 @@ class ExposureManager {
         }
         
         // get config
-        Server.shared.getExposureConfiguration { result in
+        Server.shared.getV2ExposureConfiguration { result in
             
             switch result {
             case let .success(configuration):
