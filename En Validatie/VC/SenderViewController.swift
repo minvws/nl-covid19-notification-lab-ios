@@ -29,6 +29,7 @@ class SenderViewController: UIViewController, UITextFieldDelegate {
     override func viewDidLoad() {
         super.viewDidLoad()
         textFieldTestId.delegate = self
+        textFieldTestId.text = "Some Experiment" // for easier testing only. remove later
         labelDeviceName.text = UIDevice.current.name
     }
     
@@ -40,6 +41,7 @@ class SenderViewController: UIViewController, UITextFieldDelegate {
         }
                 
         ExposureManager.shared.getTestDiagnosisKeys { result in
+            
             switch(result) {
                 
             case let .success(keys):
@@ -47,14 +49,15 @@ class SenderViewController: UIViewController, UITextFieldDelegate {
                     self.showDialog(message: "You have \(keys.count) keys. Make sure you have 1 key")
                     return
                 }
-                    
+                
                 let key = CodableDiagnosisKey(
                     keyData: firstKey.keyData,
                     rollingPeriod: firstKey.rollingPeriod,
                     rollingStartNumber: firstKey.rollingStartNumber,
                     transmissionRiskLevel: firstKey.transmissionRiskLevel,
                     testId: testId,
-                    deviceId: UIDevice.current.name
+                    deviceId: UIDevice.current.name,
+                    daysSinceOnsetOfSymptoms: 2
                 )
                 
                 let jsonData = try! JSONEncoder().encode(key)

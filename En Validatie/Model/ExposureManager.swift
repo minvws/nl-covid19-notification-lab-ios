@@ -32,7 +32,7 @@ class ExposureManager {
         }
         
         // get config
-        Server.shared.getV2ExposureConfiguration { result in
+        Server.shared.getExposureConfiguration { result in
             
             switch result {
             case let .success(configuration):
@@ -48,7 +48,6 @@ class ExposureManager {
         }
     }
     
-    
     /// Detects exposures to affected persons based on an exposure configuration and a url to a stored diagnosisKey
     /// - Parameters:
     ///   - configuration: Configuration of exposure detection
@@ -57,8 +56,6 @@ class ExposureManager {
     private func detectExposures(configuration: ENExposureConfiguration, diagnosisKeyURL: URL, completion: @escaping (Result<[ENExposureWindow], Error>) -> Void) {
            
         ExposureManager.shared.manager.detectExposures(configuration: configuration, diagnosisKeyURLs: [diagnosisKeyURL]) { summary, error in
-            
-            // For some reason `summary` is always empty when using the v2 API
             
             if let error = error {
                 completion(.failure(error))
@@ -73,16 +70,6 @@ class ExposureManager {
 
                 completion(.success(exposureWindows ?? []))
             }
-            
-            // v1 api code
-//            ExposureManager.shared.manager.getExposureInfo(summary: summary!, userExplanation: "") { (info, error) in
-//                if let error = error {
-//                    completion(.failure(error))
-//                    return
-//                }
-//
-//                completion(.success(info))
-//            }
         }
     }
     

@@ -16,12 +16,13 @@ struct CodableDiagnosisKey: Codable, Equatable {
     let transmissionRiskLevel: ENRiskLevel
     let testId:String
     let deviceId:String
+    let daysSinceOnsetOfSymptoms:Int
 }
 
 class Server {
     
     static let shared = Server()
-        
+            
     @Persisted(userDefaultsKey: "diagnosisFiles", notificationName: .init("DiagnosisFilesDidChange"), defaultValue: nil)
     var diagnosisKeyURL: URL?
     
@@ -58,9 +59,8 @@ class Server {
         do {
                         
             let signatureInfo = SignatureInfo.with { signatureInfo in
-                signatureInfo.appBundleID = Bundle.main.bundleIdentifier!
                 signatureInfo.verificationKeyVersion = "v1"
-                signatureInfo.verificationKeyID = "310"
+                signatureInfo.verificationKeyID = "204"
                 signatureInfo.signatureAlgorithm = "SHA256withECDSA"
             }
             
@@ -69,7 +69,7 @@ class Server {
             let export = TemporaryExposureKeyExport.with { export in
                 export.batchNum = 1
                 export.batchSize = 1
-                export.region = "310"
+                export.region = "204"
                 export.signatureInfos = [signatureInfo]
                 export.keys = diagnosisKeys.shuffled().map { diagnosisKey in
                     TemporaryExposureKey.with { temporaryExposureKey in
@@ -77,6 +77,7 @@ class Server {
                         temporaryExposureKey.transmissionRiskLevel = Int32(diagnosisKey.transmissionRiskLevel)
                         temporaryExposureKey.rollingStartIntervalNumber = Int32(diagnosisKey.rollingStartNumber)
                         temporaryExposureKey.rollingPeriod = Int32(diagnosisKey.rollingPeriod)
+                        temporaryExposureKey.daysSinceOnsetOfSymptoms = Int32(diagnosisKey.daysSinceOnsetOfSymptoms)
                     }
                 }
             }
@@ -96,22 +97,8 @@ class Server {
         
         
     }
-    
-    func getExposureConfiguration(completion: (Result<ENExposureConfiguration, Error>) -> Void) {
-        let SEQUENTIAL_WEIGHTS :[NSNumber] = [1,2,3,4,5,6,7,8]
-        let EQUAL_WEIGHTS :[NSNumber] = [1,1,1,1,1,1,1,1]
         
-        let exposureConfiguration = ENExposureConfiguration()
-        exposureConfiguration.minimumRiskScore = 1
-        exposureConfiguration.attenuationLevelValues = SEQUENTIAL_WEIGHTS
-        exposureConfiguration.daysSinceLastExposureLevelValues = EQUAL_WEIGHTS
-        exposureConfiguration.durationLevelValues = EQUAL_WEIGHTS
-        exposureConfiguration.transmissionRiskLevelValues = EQUAL_WEIGHTS
-        exposureConfiguration.metadata = ["attenuationDurationThresholds": [42, 56]]
-        completion(.success(exposureConfiguration))
-    }
-    
-    func getV2ExposureConfiguration(completion: (Result<ENExposureConfiguration, Error>) -> Void) {
+    func getExposureConfiguration(completion: (Result<ENExposureConfiguration, Error>) -> Void) {
         
         let SEQUENTIAL_WEIGHTS :[NSNumber] = [1,2,3,4,5,6,7,8]
         let EQUAL_WEIGHTS :[NSNumber] = [1,1,1,1,1,1,1,1]
@@ -154,6 +141,10 @@ class Server {
             13: NSNumber(value: ENInfectiousness.high.rawValue),
             14: NSNumber(value: ENInfectiousness.high.rawValue)
         ]
+        
+        // Suggested by apple to get v2 to work properly:
+        // "please make sure you’ve set reportTypeNoneMap in the configuration object to something appropriate. If the keys you are downloading have been uploaded by an app using v1 APIs, they don’t have a reportType, so the reportTypeNoneMap value is used to determine how to treat those keys, and the default is .unknown which would cause those keys to be dropped."
+        exposureConfiguration.reportTypeNoneMap = .confirmedTest
         
         completion(.success(exposureConfiguration))
 

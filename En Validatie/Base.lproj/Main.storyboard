@@ -2,7 +2,6 @@
 <document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="17156" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES" initialViewController="7Og-Ls-iYk">
     <device id="retina6_1" orientation="portrait" appearance="light"/>
     <dependencies>
-        <deployment identifier="iOS"/>
         <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="17126"/>
         <capability name="Named colors" minToolsVersion="9.0"/>
         <capability name="Safe area layout guides" minToolsVersion="9.0"/>
@@ -22,7 +21,7 @@
                                 <rect key="frame" x="0.0" y="88" width="414" height="725"/>
                                 <color key="backgroundColor" systemColor="systemBackgroundColor"/>
                                 <prototypes>
-                                    <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" insetsLayoutMarginsFromSafeArea="NO" selectionStyle="blue" hidesAccessoryWhenEditing="NO" indentationLevel="1" indentationWidth="0.0" reuseIdentifier="Cell" textLabel="Xjj-RM-k5O" detailTextLabel="sR1-D9-RfN" style="IBUITableViewCellStyleValue1" id="4IM-Ac-3fQ">
+                                    <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" insetsLayoutMarginsFromSafeArea="NO" selectionStyle="blue" hidesAccessoryWhenEditing="NO" indentationLevel="1" indentationWidth="0.0" reuseIdentifier="Cell" textLabel="Xjj-RM-k5O" style="IBUITableViewCellStyleDefault" id="4IM-Ac-3fQ">
                                         <rect key="frame" x="0.0" y="28" width="414" height="43.5"/>
                                         <autoresizingMask key="autoresizingMask"/>
                                         <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" insetsLayoutMarginsFromSafeArea="NO" tableViewCell="4IM-Ac-3fQ" id="KHR-p0-56S">
@@ -30,17 +29,10 @@
                                             <autoresizingMask key="autoresizingMask"/>
                                             <subviews>
                                                 <label opaque="NO" multipleTouchEnabled="YES" contentMode="left" insetsLayoutMarginsFromSafeArea="NO" text="Title" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" id="Xjj-RM-k5O">
-                                                    <rect key="frame" x="20" y="12" width="33" height="20.5"/>
+                                                    <rect key="frame" x="20" y="0.0" width="374" height="43.5"/>
                                                     <autoresizingMask key="autoresizingMask"/>
                                                     <fontDescription key="fontDescription" type="system" pointSize="17"/>
                                                     <nil key="textColor"/>
-                                                    <nil key="highlightedColor"/>
-                                                </label>
-                                                <label opaque="NO" multipleTouchEnabled="YES" contentMode="left" insetsLayoutMarginsFromSafeArea="NO" text="Detail" textAlignment="right" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" id="sR1-D9-RfN">
-                                                    <rect key="frame" x="350" y="12" width="44" height="20.5"/>
-                                                    <autoresizingMask key="autoresizingMask"/>
-                                                    <fontDescription key="fontDescription" type="system" pointSize="17"/>
-                                                    <color key="textColor" white="0.66666666666666663" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                                     <nil key="highlightedColor"/>
                                                 </label>
                                             </subviews>
@@ -63,15 +55,20 @@
                         </constraints>
                     </view>
                     <navigationItem key="navigationItem" title="Exposure Windows" id="jvW-zw-yfc">
+                        <barButtonItem key="leftBarButtonItem" systemItem="camera" id="V2J-uB-0Pk">
+                            <connections>
+                                <action selector="scanQrClick:" destination="BYZ-38-t0r" id="v4V-lo-BBX"/>
+                            </connections>
+                        </barButtonItem>
                         <rightBarButtonItems>
+                            <barButtonItem systemItem="trash" id="0bL-Vg-6TF">
+                                <connections>
+                                    <action selector="trashClick:" destination="BYZ-38-t0r" id="ecl-7M-LEK"/>
+                                </connections>
+                            </barButtonItem>
                             <barButtonItem systemItem="action" id="gvu-Mm-nmB">
                                 <connections>
                                     <action selector="shareClick:" destination="BYZ-38-t0r" id="thh-FK-ae1"/>
-                                </connections>
-                            </barButtonItem>
-                            <barButtonItem systemItem="camera" id="0bL-Vg-6TF">
-                                <connections>
-                                    <action selector="scanQrClick:" destination="BYZ-38-t0r" id="tI3-bD-iaI"/>
                                 </connections>
                             </barButtonItem>
                         </rightBarButtonItems>
@@ -148,7 +145,7 @@
                                     <action selector="generateQRCode:" destination="n86-2P-iHb" eventType="touchUpInside" id="YOT-ff-wHK"/>
                                 </connections>
                             </button>
-                            <textField opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" placeholder="Test id" textAlignment="natural" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="SJG-gU-pYT">
+                            <textField opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" placeholder="Test id" textAlignment="natural" minimumFontSize="17" clearButtonMode="whileEditing" translatesAutoresizingMaskIntoConstraints="NO" id="SJG-gU-pYT">
                                 <rect key="frame" x="20" y="171" width="374" height="34"/>
                                 <fontDescription key="fontDescription" type="system" pointSize="14"/>
                                 <textInputTraits key="textInputTraits" returnKeyType="done"/>
@@ -192,7 +189,7 @@
                             <constraint firstItem="vIl-XJ-1iI" firstAttribute="trailing" secondItem="AAf-aY-GoX" secondAttribute="trailing" constant="20" id="yBe-aC-T6Z"/>
                         </constraints>
                     </view>
-                    <tabBarItem key="tabBarItem" title="Status" id="KyY-Kh-ZIe"/>
+                    <tabBarItem key="tabBarItem" title="Status" selectedImage="qrcode" catalog="system" id="KyY-Kh-ZIe"/>
                     <navigationItem key="navigationItem" id="Hen-NU-RS0"/>
                     <connections>
                         <outlet property="buttonShare" destination="zVT-5g-74Q" id="n1L-1p-yVO"/>
@@ -211,7 +208,7 @@
         <scene sceneID="mVj-pX-tfY">
             <objects>
                 <navigationController automaticallyAdjustsScrollViewInsets="NO" id="QWZ-mb-nfL" sceneMemberID="viewController">
-                    <tabBarItem key="tabBarItem" title="Keys" id="Q4U-SF-fgB"/>
+                    <tabBarItem key="tabBarItem" title="Keys" selectedImage="key" catalog="system" id="Q4U-SF-fgB"/>
                     <toolbarItems/>
                     <navigationBar key="navigationBar" contentMode="scaleToFill" insetsLayoutMarginsFromSafeArea="NO" id="sgn-vF-f7V">
                         <rect key="frame" x="0.0" y="44" width="414" height="44"/>
@@ -229,6 +226,8 @@
     </scenes>
     <color key="tintColor" name="Primary"/>
     <resources>
+        <image name="key" catalog="system" width="86" height="128"/>
+        <image name="qrcode" catalog="system" width="128" height="114"/>
         <namedColor name="Primary">
             <color red="0.38400000333786011" green="0.0" blue="0.93300002813339233" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
         </namedColor>
