@@ -54,7 +54,7 @@
                             <constraint firstItem="4VX-yq-oxq" firstAttribute="top" secondItem="6Tk-OE-BBY" secondAttribute="top" id="iYn-hs-Ouy"/>
                         </constraints>
                     </view>
-                    <navigationItem key="navigationItem" title="Exposure Windows" id="jvW-zw-yfc">
+                    <navigationItem key="navigationItem" title="Scans" id="jvW-zw-yfc">
                         <barButtonItem key="leftBarButtonItem" systemItem="camera" id="V2J-uB-0Pk">
                             <connections>
                                 <action selector="scanQrClick:" destination="BYZ-38-t0r" id="v4V-lo-BBX"/>
@@ -74,6 +74,8 @@
                         </rightBarButtonItems>
                     </navigationItem>
                     <connections>
+                        <outlet property="deleteButton" destination="0bL-Vg-6TF" id="6Q2-3M-zBZ"/>
+                        <outlet property="shareButton" destination="gvu-Mm-nmB" id="ZZS-Jh-CWr"/>
                         <outlet property="tableView" destination="4VX-yq-oxq" id="Flt-9r-4Yr"/>
                     </connections>
                 </viewController>

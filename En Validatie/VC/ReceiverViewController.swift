@@ -8,11 +8,12 @@
 import UIKit
 import ExposureNotification
 import CoreBluetooth
-import MessageUI
 
-class ReceiverViewController: UIViewController, MFMailComposeViewControllerDelegate {
+class ReceiverViewController: UIViewController {
     
     @IBOutlet weak var tableView: UITableView!
+    @IBOutlet weak var shareButton: UIBarButtonItem!
+    @IBOutlet weak var deleteButton: UIBarButtonItem!
     
     @Persisted(userDefaultsKey: "testResults", notificationName: .init("TestResultsDidChange"), defaultValue: [])
     var testResults: [TestResult]
@@ -22,10 +23,18 @@ class ReceiverViewController: UIViewController, MFMailComposeViewControllerDeleg
     override func viewDidLoad() {
         super.viewDidLoad()
         NotificationCenter.default.addObserver(self, selector: #selector(onScannedQR(_:)), name: Server.shared.$diagnosisKeyURL.notificationName, object: nil)
+        
+        updateUI()
     }
     
     deinit {
         NotificationCenter.default.removeObserver(self, name: Server.shared.$diagnosisKeyURL.notificationName, object: nil)
+    }
+    
+    private func updateUI() {
+        tableView.reloadData()
+        shareButton.isEnabled = !testResults.isEmpty
+        deleteButton.isEnabled = !testResults.isEmpty
     }
     
     @objc func onScannedQR(_ notification: Notification) {
@@ -51,7 +60,7 @@ class ReceiverViewController: UIViewController, MFMailComposeViewControllerDeleg
                 
                 self.generateTestResults(scannedKey: scannedKey, exposureWindows: exposureWindows)
                 
-                self.tableView.reloadData()
+                self.updateUI()
             }
         }
     }
@@ -96,34 +105,37 @@ class ReceiverViewController: UIViewController, MFMailComposeViewControllerDeleg
     }
     
     @IBAction func trashClick(_ sender: Any) {
-        let alert = UIAlertController(title: "Warning", message: "This will delete all stored testdata", preferredStyle: .alert)
+        let alert = UIAlertController(title: "Warning", message: "This will delete all stored testdata! This operation CANNOT be undone. Make sure you export any data you want to keep.", preferredStyle: .alert)
         alert.addAction(UIAlertAction(title: "Cancel", style: .cancel, handler: nil))
         alert.addAction(UIAlertAction(title: "Delete", style: .destructive, handler: { _ in
             self.testResults = []
-            self.tableView.reloadData()
+            self.updateUI()
         }))
         self.present(alert, animated: true, completion: nil)
     }
     
     @IBAction func shareClick(_ sender: Any) {
-        //        if MFMailComposeViewController.canSendMail() {
-        //
-        //            guard let body = self.labelScores.text else {
-        //                return
-        //            }
-        //
-        //            let mail = MFMailComposeViewController()
-        //            mail.mailComposeDelegate = self
-        //            mail.setMessageBody(body, isHTML: false)
-        //
-        //            present(mail, animated: true)
-        //        } else {
-        //            self.showDialog(message: "Mail not available")
-        //        }
-    }
+        
+        var lines = ["Id,Test,Scanned device,Scanned TEK,Timestamp,Exposure window id,Exposure window timestamp,Calibration confidence,Scan instance id,Min attenuation,Typical attenuation,Seconds since last scan"]
+        
+        testResults.forEach { (result) in
+            lines.append("\(result.id),\(result.test),\(result.scannedDevice),\(result.scannedTEK),\(result.timestamp),\(result.exposureWindowID),\(result.exposureWindowTimestamp), \(result.calibrationConfidence),\(result.scanInstanceId),\(result.minAttenuation),\(result.typicalAttenuation),\(result.secondsSinceLastScan)")
+        }
+        
+        let fileManager = FileManager.default
+        do {
+            let path = try fileManager.url(for: .documentDirectory, in: .allDomainsMask, appropriateFor: nil, create: false)
+            let fileURL = path.appendingPathComponent("testresults.csv")
+            try lines.joined(separator: "\n").write(to: fileURL, atomically: true, encoding: .utf8)
+
+            let objectsToShare = [fileURL]
+            let activityVC = UIActivityViewController(activityItems: objectsToShare, applicationActivities: nil)
+
+            self.present(activityVC, animated: true, completion: nil)
     
-    func mailComposeController(_ controller: MFMailComposeViewController, didFinishWith result: MFMailComposeResult, error: Error?) {
-        controller.dismiss(animated: true)
+        } catch {
+            print("error creating file")
+        }
     }
 }
 
@@ -141,7 +153,7 @@ extension ReceiverViewController: UITableViewDataSource {
         
         var cellContent = [String]()
         cellContent.append("\(testResult.test) - \(testResult.scannedDevice)")
-        cellContent.append("\(testResult.exposureWindowTimestamp)")
+        cellContent.append("\(Date(timeIntervalSince1970: testResult.timestamp))")
         cellContent.append("\(testResult.scannedTEK)")
         cellContent.append("Attn min: \(testResult.minAttenuation) Db, typical: \(testResult.typicalAttenuation) Db, secondsSinceLastScan: \(testResult.secondsSinceLastScan) s")
                 
