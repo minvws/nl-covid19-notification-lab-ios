@@ -25,6 +25,7 @@
 		D2FD69CF247D46E800BA7EA1 /* LocalStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = D2FD69CE247D46E800BA7EA1 /* LocalStore.swift */; };
 		D2FD69D1247D4ADF00BA7EA1 /* ScannerViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = D2FD69D0247D4ADF00BA7EA1 /* ScannerViewController.swift */; };
 		D2FD69D4247D860800BA7EA1 /* SenderViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = D2FD69D3247D860800BA7EA1 /* SenderViewController.swift */; };
+		F47980962565B84600185C37 /* TestResult.swift in Sources */ = {isa = PBXBuildFile; fileRef = F47980952565B84600185C37 /* TestResult.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -47,6 +48,7 @@
 		D2FD69CE247D46E800BA7EA1 /* LocalStore.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LocalStore.swift; sourceTree = "<group>"; };
 		D2FD69D0247D4ADF00BA7EA1 /* ScannerViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ScannerViewController.swift; sourceTree = "<group>"; };
 		D2FD69D3247D860800BA7EA1 /* SenderViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SenderViewController.swift; sourceTree = "<group>"; };
+		F47980952565B84600185C37 /* TestResult.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TestResult.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -105,6 +107,7 @@
 				D2FD69CC247D461C00BA7EA1 /* Server.swift */,
 				D2FD69CE247D46E800BA7EA1 /* LocalStore.swift */,
 				D2FD69C2247D450E00BA7EA1 /* ExposureManager.swift */,
+				F47980952565B84600185C37 /* TestResult.swift */,
 			);
 			path = Model;
 			sourceTree = "<group>";
@@ -204,6 +207,7 @@
 				D2FD69B2247D445500BA7EA1 /* ReceiverViewController.swift in Sources */,
 				D2FD69CF247D46E800BA7EA1 /* LocalStore.swift in Sources */,
 				D2FD69AE247D445500BA7EA1 /* AppDelegate.swift in Sources */,
+				F47980962565B84600185C37 /* TestResult.swift in Sources */,
 				D2FD69C3247D450E00BA7EA1 /* ExposureManager.swift in Sources */,
 				D2FD69B0247D445500BA7EA1 /* SceneDelegate.swift in Sources */,
 				D2FD69CD247D461C00BA7EA1 /* Server.swift in Sources */,

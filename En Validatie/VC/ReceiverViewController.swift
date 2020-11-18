@@ -18,8 +18,6 @@ class ReceiverViewController: UIViewController {
     @Persisted(userDefaultsKey: "testResults", notificationName: .init("TestResultsDidChange"), defaultValue: [])
     var testResults: [TestResult]
     
-    private var exposureWindows = [ENExposureWindow]()
-    
     override func viewDidLoad() {
         super.viewDidLoad()
         NotificationCenter.default.addObserver(self, selector: #selector(onScannedQR(_:)), name: Server.shared.$diagnosisKeyURL.notificationName, object: nil)
@@ -31,25 +29,64 @@ class ReceiverViewController: UIViewController {
         NotificationCenter.default.removeObserver(self, name: Server.shared.$diagnosisKeyURL.notificationName, object: nil)
     }
     
+    @IBAction func scanQrClick(_ sender: Any) {
+        self.present(ScannerViewController(), animated: true, completion: nil)
+    }
+    
+    @IBAction func trashClick(_ sender: Any) {
+        let alert = UIAlertController(title: "Warning", message: "This will delete all stored testdata! This operation CANNOT be undone. Make sure you export any data you want to keep.", preferredStyle: .alert)
+        alert.addAction(UIAlertAction(title: "Cancel", style: .cancel, handler: nil))
+        alert.addAction(UIAlertAction(title: "Delete", style: .destructive, handler: { _ in
+            self.testResults = []
+            self.updateUI()
+        }))
+        self.present(alert, animated: true, completion: nil)
+    }
+    
+    @IBAction func shareClick(_ sender: Any) {
+        
+        var lines = ["Id,Test,Scanned device,Scanned TEK,Timestamp,Exposure window id,Exposure window timestamp,Calibration confidence,Scan instance id,Min attenuation,Typical attenuation,Seconds since last scan"]
+        
+        testResults.forEach { (result) in
+            lines.append("\(result.id),\(result.test),\(result.scannedDevice),\(result.scannedTEK),\(result.timestamp),\(result.exposureWindowID),\(result.exposureWindowTimestamp), \(result.calibrationConfidence),\(result.scanInstanceId),\(result.minAttenuation),\(result.typicalAttenuation),\(result.secondsSinceLastScan)")
+        }
+        
+        let fileManager = FileManager.default
+        do {
+            let path = try fileManager.url(for: .documentDirectory, in: .allDomainsMask, appropriateFor: nil, create: false)
+            let fileURL = path.appendingPathComponent("testresults.csv")
+            try lines.joined(separator: "\n").write(to: fileURL, atomically: true, encoding: .utf8)
+            
+            let objectsToShare = [fileURL]
+            let activityVC = UIActivityViewController(activityItems: objectsToShare, applicationActivities: nil)
+            
+            self.present(activityVC, animated: true, completion: nil)
+            
+        } catch {
+            showDialog(title: "Error", message: "Unable to create testresult exportfile")
+        }
+    }
+    
     private func updateUI() {
         tableView.reloadData()
         shareButton.isEnabled = !testResults.isEmpty
         deleteButton.isEnabled = !testResults.isEmpty
     }
     
+    
+    /// Called when `ScannerViewController` has successfully scanned a TEK QR code. The scanned diagnosiskey will be stored in Server.shared.diagnosisKey at this point.
     @objc func onScannedQR(_ notification: Notification) {
         
-        guard let scannedKey = Server.shared.diagnosisKeys.first else {
+        guard let scannedKey = Server.shared.diagnosisKey else {
             self.showDialog(title: "Error", message: "No scanned diagnosiskey found")
             return
         }
-                
-        ExposureManager.shared.detectExposures { result in
+        
+        ExposureManager.shared.getExposureWindows { result in
             
             switch(result) {
             
             case let .failure(error):
-                self.exposureWindows = []
                 self.showDialog(title: "Error", message: "\(error)")
                 
             case let .success(exposureWindows):
@@ -93,49 +130,11 @@ class ReceiverViewController: UIViewController {
         testResults.append(contentsOf: newTestResults)
     }
     
-    func showDialog(title: String = "Info", message:String) {
+    private func showDialog(title: String = "Info", message:String) {
         let alert = UIAlertController(title: "Info", message: "", preferredStyle: .alert)
         alert.addAction(UIAlertAction(title: "OK", style: .destructive, handler: nil))
         alert.message = message
         self.present(alert, animated: true, completion: nil)
-    }
-    
-    @IBAction func scanQrClick(_ sender: Any) {
-        self.present(ScannerViewController(), animated: true, completion: nil)
-    }
-    
-    @IBAction func trashClick(_ sender: Any) {
-        let alert = UIAlertController(title: "Warning", message: "This will delete all stored testdata! This operation CANNOT be undone. Make sure you export any data you want to keep.", preferredStyle: .alert)
-        alert.addAction(UIAlertAction(title: "Cancel", style: .cancel, handler: nil))
-        alert.addAction(UIAlertAction(title: "Delete", style: .destructive, handler: { _ in
-            self.testResults = []
-            self.updateUI()
-        }))
-        self.present(alert, animated: true, completion: nil)
-    }
-    
-    @IBAction func shareClick(_ sender: Any) {
-        
-        var lines = ["Id,Test,Scanned device,Scanned TEK,Timestamp,Exposure window id,Exposure window timestamp,Calibration confidence,Scan instance id,Min attenuation,Typical attenuation,Seconds since last scan"]
-        
-        testResults.forEach { (result) in
-            lines.append("\(result.id),\(result.test),\(result.scannedDevice),\(result.scannedTEK),\(result.timestamp),\(result.exposureWindowID),\(result.exposureWindowTimestamp), \(result.calibrationConfidence),\(result.scanInstanceId),\(result.minAttenuation),\(result.typicalAttenuation),\(result.secondsSinceLastScan)")
-        }
-        
-        let fileManager = FileManager.default
-        do {
-            let path = try fileManager.url(for: .documentDirectory, in: .allDomainsMask, appropriateFor: nil, create: false)
-            let fileURL = path.appendingPathComponent("testresults.csv")
-            try lines.joined(separator: "\n").write(to: fileURL, atomically: true, encoding: .utf8)
-
-            let objectsToShare = [fileURL]
-            let activityVC = UIActivityViewController(activityItems: objectsToShare, applicationActivities: nil)
-
-            self.present(activityVC, animated: true, completion: nil)
-    
-        } catch {
-            print("error creating file")
-        }
     }
 }
 
@@ -152,29 +151,28 @@ extension ReceiverViewController: UITableViewDataSource {
         }
         
         var cellContent = [String]()
-        cellContent.append("\(testResult.test) - \(testResult.scannedDevice)")
-        cellContent.append("\(Date(timeIntervalSince1970: testResult.timestamp))")
-        cellContent.append("\(testResult.scannedTEK)")
-        cellContent.append("Attn min: \(testResult.minAttenuation) Db, typical: \(testResult.typicalAttenuation) Db, secondsSinceLastScan: \(testResult.secondsSinceLastScan) s")
-                
-        cell.textLabel?.text = cellContent.joined(separator: "\n")
+        
+        cellContent.append("<style>body{font-size:16px;}</style>")
+        cellContent.append("<b>Test:</b> \(testResult.test)<br />")
+        cellContent.append("<b>Scanned Device:</b> \(testResult.scannedDevice)<br />")
+        cellContent.append("<b>QR Scanned:</b> \(Date(timeIntervalSince1970: testResult.timestamp))<br />")
+        cellContent.append("<b>TEK:</b> \(testResult.scannedTEK)<br />")
+        cellContent.append("<b>Attenuation:</b> min:\(testResult.minAttenuation) Db, typical:\(testResult.typicalAttenuation) Db<br />")
+        cellContent.append("<b>SecondsSinceLastScan:</b>\(testResult.secondsSinceLastScan) s<br />")
+        cellContent.append("<b>ExpWindowTime:</b>\(Date(timeIntervalSince1970: testResult.exposureWindowTimestamp))")
+        
+        let data = cellContent.joined().data(using: String.Encoding.utf16, allowLossyConversion: false)!
+        
+        cell.textLabel?.attributedText = try! NSAttributedString(
+            data: data,
+            options: [
+                .documentType: NSAttributedString.DocumentType.html,
+                .characterEncoding: String.Encoding.utf8.rawValue
+            ],
+            documentAttributes: nil
+        )
         cell.textLabel?.numberOfLines = 0
         
         return cell
     }
-}
-
-struct TestResult: Codable {
-    let id: String
-    let test: String
-    let scannedDevice: String
-    let scannedTEK: String
-    let timestamp: Double //?
-    let exposureWindowID: String
-    let exposureWindowTimestamp: Double //?
-    let calibrationConfidence: Int
-    let scanInstanceId: String
-    let minAttenuation: ENAttenuation
-    let typicalAttenuation: ENAttenuation
-    let secondsSinceLastScan: Int
 }

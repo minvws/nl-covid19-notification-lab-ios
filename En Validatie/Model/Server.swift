@@ -26,8 +26,8 @@ class Server {
     @Persisted(userDefaultsKey: "diagnosisFiles", notificationName: .init("DiagnosisFilesDidChange"), defaultValue: nil)
     var diagnosisKeyURL: URL?
     
-    @Persisted(userDefaultsKey: "diagnosisKeys", notificationName: .init("ServerDiagnosisKeysDidChange"), defaultValue: [])
-    var diagnosisKeys: [CodableDiagnosisKey]
+    @Persisted(userDefaultsKey: "diagnosisKey", notificationName: .init("ServerDiagnosisKeysDidChange"), defaultValue: nil)
+    var diagnosisKey: CodableDiagnosisKey?
     
     
     /// Stores the passed Diagnosiskey in local storage and generates and saves a binary and signature pair of files based on that locally stored diagnosis keys
@@ -36,9 +36,9 @@ class Server {
     ///   - completion: Called when actions are complete
     func postDiagnosisKeys(_ key: CodableDiagnosisKey, completion: (Error?) -> Void) {
         
-        diagnosisKeys = [key]
+        diagnosisKey = key
         
-        downloadDiagnosisKeyFile { result in
+        downloadDiagnosisKeyFile(diagnosisKey: key) { result in
             switch(result) {
             case let .success(url):
                 self.diagnosisKeyURL = url
@@ -54,7 +54,7 @@ class Server {
     
     /// Generates and saves a binary and signature pair of files based on `diagnosisKeys`
     /// - Parameter completion: Called when action is completed, parameter contains the local URL of the downloaded diagnosis key file ('.bin') or an error when it failed
-    private func downloadDiagnosisKeyFile(completion: (Result<URL, Error>) -> Void) {
+    private func downloadDiagnosisKeyFile(diagnosisKey: CodableDiagnosisKey, completion: (Result<URL, Error>) -> Void) {
         
         do {
                         
@@ -71,7 +71,7 @@ class Server {
                 export.batchSize = 1
                 export.region = "204"
                 export.signatureInfos = [signatureInfo]
-                export.keys = diagnosisKeys.shuffled().map { diagnosisKey in
+                export.keys = [diagnosisKey].map { diagnosisKey in
                     TemporaryExposureKey.with { temporaryExposureKey in
                         temporaryExposureKey.keyData = diagnosisKey.keyData
                         temporaryExposureKey.transmissionRiskLevel = Int32(diagnosisKey.transmissionRiskLevel)
