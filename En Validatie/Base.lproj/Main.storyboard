@@ -55,7 +55,7 @@
                         </constraints>
                     </view>
                     <navigationItem key="navigationItem" title="Scans" id="jvW-zw-yfc">
-                        <barButtonItem key="leftBarButtonItem" systemItem="camera" id="V2J-uB-0Pk">
+                        <barButtonItem key="leftBarButtonItem" title="Scan TEK QR " image="qrcode.viewfinder" catalog="system" id="V2J-uB-0Pk">
                             <connections>
                                 <action selector="scanQrClick:" destination="BYZ-38-t0r" id="v4V-lo-BBX"/>
                             </connections>
@@ -191,7 +191,7 @@
                             <constraint firstItem="vIl-XJ-1iI" firstAttribute="trailing" secondItem="AAf-aY-GoX" secondAttribute="trailing" constant="20" id="yBe-aC-T6Z"/>
                         </constraints>
                     </view>
-                    <tabBarItem key="tabBarItem" title="Status" selectedImage="qrcode" catalog="system" id="KyY-Kh-ZIe"/>
+                    <tabBarItem key="tabBarItem" title="Status" image="qrcode" catalog="system" selectedImage="qrcode" id="KyY-Kh-ZIe"/>
                     <navigationItem key="navigationItem" id="Hen-NU-RS0"/>
                     <connections>
                         <outlet property="buttonShare" destination="zVT-5g-74Q" id="n1L-1p-yVO"/>
@@ -210,7 +210,7 @@
         <scene sceneID="mVj-pX-tfY">
             <objects>
                 <navigationController automaticallyAdjustsScrollViewInsets="NO" id="QWZ-mb-nfL" sceneMemberID="viewController">
-                    <tabBarItem key="tabBarItem" title="Keys" selectedImage="key" catalog="system" id="Q4U-SF-fgB"/>
+                    <tabBarItem key="tabBarItem" title="Keys" image="key" catalog="system" id="Q4U-SF-fgB"/>
                     <toolbarItems/>
                     <navigationBar key="navigationBar" contentMode="scaleToFill" insetsLayoutMarginsFromSafeArea="NO" id="sgn-vF-f7V">
                         <rect key="frame" x="0.0" y="44" width="414" height="44"/>
@@ -230,6 +230,7 @@
     <resources>
         <image name="key" catalog="system" width="86" height="128"/>
         <image name="qrcode" catalog="system" width="128" height="114"/>
+        <image name="qrcode.viewfinder" catalog="system" width="128" height="115"/>
         <namedColor name="Primary">
             <color red="0.38400000333786011" green="0.0" blue="0.93300002813339233" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
         </namedColor>
