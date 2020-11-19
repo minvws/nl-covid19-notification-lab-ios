@@ -15,9 +15,9 @@ struct TestResult: Codable {
     let scannedDevice: String
     let scannedTEK: String
     let timestamp: Double
-    let exposureWindowID: String
-    let exposureWindowTimestamp: Double
-    let calibrationConfidence: Int
+    let exposureWindowID: String?
+    let exposureWindowTimestamp: Double?
+    let calibrationConfidence: Int?
     let scanInstanceId: String?
     let minAttenuation: ENAttenuation?
     let typicalAttenuation: ENAttenuation?

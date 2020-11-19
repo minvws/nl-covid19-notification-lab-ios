@@ -10,10 +10,10 @@
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
     <scenes>
-        <!--Client-->
+        <!--Scans-->
         <scene sceneID="tne-QT-ifu">
             <objects>
-                <viewController title="Client" id="BYZ-38-t0r" customClass="ReceiverViewController" customModule="EN_Validatie" customModuleProvider="target" sceneMemberID="viewController">
+                <viewController title="Scans" id="BYZ-38-t0r" customClass="ReceiverViewController" customModule="EN_Validatie" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="8bC-Xf-vdC">
                         <rect key="frame" x="0.0" y="0.0" width="414" height="896"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
@@ -256,11 +256,11 @@
             </objects>
             <point key="canvasLocation" x="69.565217391304358" y="849.77678571428567"/>
         </scene>
-        <!--Keys-->
+        <!--Scans-->
         <scene sceneID="mVj-pX-tfY">
             <objects>
                 <navigationController automaticallyAdjustsScrollViewInsets="NO" id="QWZ-mb-nfL" sceneMemberID="viewController">
-                    <tabBarItem key="tabBarItem" title="Keys" image="key" catalog="system" id="Q4U-SF-fgB"/>
+                    <tabBarItem key="tabBarItem" title="Scans" image="antenna.radiowaves.left.and.right" catalog="system" id="Q4U-SF-fgB"/>
                     <toolbarItems/>
                     <navigationBar key="navigationBar" contentMode="scaleToFill" insetsLayoutMarginsFromSafeArea="NO" id="sgn-vF-f7V">
                         <rect key="frame" x="0.0" y="44" width="414" height="44"/>
@@ -278,7 +278,7 @@
     </scenes>
     <color key="tintColor" name="Primary"/>
     <resources>
-        <image name="key" catalog="system" width="86" height="128"/>
+        <image name="antenna.radiowaves.left.and.right" catalog="system" width="128" height="109"/>
         <image name="qrcode" catalog="system" width="128" height="114"/>
         <image name="qrcode.viewfinder" catalog="system" width="128" height="115"/>
         <namedColor name="Primary">

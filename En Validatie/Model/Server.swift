@@ -28,10 +28,7 @@ class Server {
     
     @Persisted(userDefaultsKey: "diagnosisKey", notificationName: .init("ServerDiagnosisKeysDidChange"), defaultValue: nil)
     var diagnosisKey: CodableDiagnosisKey?
-    
-    @Persisted(userDefaultsKey: "scannedDiagnosisKeys", notificationName: .init("ServerSCannedDiagnosisKeysDidChange"), defaultValue: [])
-    var scannedDiagnosisKeys: [String]
-    
+        
     
     /// Stores the passed Diagnosiskey in local storage and generates and saves a binary and signature pair of files based on that locally stored diagnosis keys
     /// - Parameters:
@@ -54,7 +51,6 @@ class Server {
     }
     
     func clearData() {
-        scannedDiagnosisKeys = []
         diagnosisKey = nil
         diagnosisKeyURL = nil
     }

@@ -55,8 +55,11 @@ class ReceiverViewController: UIViewController, ScannerViewControllerDelegate {
             let minAttenuation = result.minAttenuation != nil ? "\(result.minAttenuation ?? 0)" : ""
             let typicalAttenuation = result.typicalAttenuation != nil ? "\(result.typicalAttenuation ?? 0)" : ""
             let secondsSinceLastScan = result.secondsSinceLastScan != nil ? "\(result.secondsSinceLastScan ?? 0)" : ""
+            let exposureWindowID = result.exposureWindowID != nil ? "\(result.exposureWindowID ?? "")" : ""
+            let exposureWindowTimestamp = result.exposureWindowTimestamp != nil ? "\(result.exposureWindowTimestamp ?? 0)" : ""
+            let calibrationConfidence = result.calibrationConfidence != nil ? "\(result.calibrationConfidence ?? 0)" : ""
             
-            lines.append("\(result.id),\(result.test),\(result.scannedDevice),\(result.scannedTEK),\(result.timestamp),\(result.exposureWindowID),\(result.exposureWindowTimestamp),\(result.calibrationConfidence),\(scanInstanceId),\(minAttenuation),\(typicalAttenuation),\(secondsSinceLastScan)")
+            lines.append("\(result.id),\(result.test),\(result.scannedDevice),\(result.scannedTEK),\(result.timestamp),\(exposureWindowID),\(exposureWindowTimestamp),\(calibrationConfidence),\(scanInstanceId),\(minAttenuation),\(typicalAttenuation),\(secondsSinceLastScan)")
         }
         
         let fileManager = FileManager.default
@@ -89,14 +92,6 @@ class ReceiverViewController: UIViewController, ScannerViewControllerDelegate {
             return
         }
         
-        let keyBase64 = scannedKey.keyData.base64EncodedString()
-        guard !Server.shared.scannedDiagnosisKeys.contains(keyBase64) else {
-            self.showDialog(title: "Error", message: "TEK was already scanned before, not processing")
-            return
-        }
-        
-        Server.shared.scannedDiagnosisKeys.append(keyBase64)
-        
         ExposureManager.shared.getExposureWindows { result in
             
             switch(result) {
@@ -105,10 +100,6 @@ class ReceiverViewController: UIViewController, ScannerViewControllerDelegate {
                 self.showDialog(title: "Error", message: "\(error)")
                 
             case let .success(exposureWindows):
-                
-                if exposureWindows.isEmpty {
-                    self.showDialog(message: "no exposure windows found")
-                }
                 
                 self.generateTestResults(scannedKey: scannedKey, exposureWindows: exposureWindows)
                 
@@ -122,6 +113,23 @@ class ReceiverViewController: UIViewController, ScannerViewControllerDelegate {
         let testResultID = UUID()
         
         var newTestResults = [TestResult]()
+        let resultGenerationTimeStamp = Date().timeIntervalSince1970
+        if exposureWindows.isEmpty {
+            newTestResults.append(TestResult(
+                id: testResultID.uuidString,
+                test: scannedKey.testId,
+                scannedDevice: scannedKey.deviceId,
+                scannedTEK: scannedKey.keyData.base64EncodedString(),
+                timestamp: resultGenerationTimeStamp,
+                exposureWindowID: nil,
+                exposureWindowTimestamp: nil,
+                calibrationConfidence: nil,
+                scanInstanceId: nil,
+                minAttenuation: nil,
+                typicalAttenuation: nil,
+                secondsSinceLastScan: nil
+            ))
+        }
         
         exposureWindows.forEach { (window) in
             
@@ -133,7 +141,7 @@ class ReceiverViewController: UIViewController, ScannerViewControllerDelegate {
                     test: scannedKey.testId,
                     scannedDevice: scannedKey.deviceId,
                     scannedTEK: scannedKey.keyData.base64EncodedString(),
-                    timestamp: Date().timeIntervalSince1970,
+                    timestamp: resultGenerationTimeStamp,
                     exposureWindowID: windowID.uuidString,
                     exposureWindowTimestamp: window.date.timeIntervalSince1970,
                     calibrationConfidence: Int(window.calibrationConfidence.rawValue),
@@ -151,7 +159,7 @@ class ReceiverViewController: UIViewController, ScannerViewControllerDelegate {
                     test: scannedKey.testId,
                     scannedDevice: scannedKey.deviceId,
                     scannedTEK: scannedKey.keyData.base64EncodedString(),
-                    timestamp: Date().timeIntervalSince1970,
+                    timestamp: resultGenerationTimeStamp,
                     exposureWindowID: windowID.uuidString,
                     exposureWindowTimestamp: window.date.timeIntervalSince1970,
                     calibrationConfidence: Int(window.calibrationConfidence.rawValue),
@@ -198,13 +206,14 @@ extension ReceiverViewController: UITableViewDataSource {
         
         if let minAttenuation = testResult.minAttenuation,
            let typicalAttenuation = testResult.typicalAttenuation,
-           let secondsSinceLastScan = testResult.secondsSinceLastScan {
+           let secondsSinceLastScan = testResult.secondsSinceLastScan,
+           let exposureWindowTimestamp = testResult.exposureWindowTimestamp {
             
             cellContent.append("<b>Attenuation:</b> min:\(minAttenuation) Db, typical:\(typicalAttenuation) Db<br />")
             cellContent.append("<b>SecondsSinceLastScan:</b>\(secondsSinceLastScan) s<br />")
-            cellContent.append("<b>ExpWindowTime:</b>\(Date(timeIntervalSince1970: testResult.exposureWindowTimestamp))")
+            cellContent.append("<b>ExpWindowTime:</b>\(Date(timeIntervalSince1970: exposureWindowTimestamp))")
         } else {
-            cellContent.append("no scan results")
+            cellContent.append("No exposure windows or scaninstances found")
         }
         
         let data = cellContent.joined().data(using: String.Encoding.utf16, allowLossyConversion: false)!
