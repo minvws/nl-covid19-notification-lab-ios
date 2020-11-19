@@ -48,7 +48,12 @@ class ReceiverViewController: UIViewController {
         var lines = ["Id,Test,Scanned device,Scanned TEK,Timestamp,Exposure window id,Exposure window timestamp,Calibration confidence,Scan instance id,Min attenuation,Typical attenuation,Seconds since last scan"]
         
         testResults.forEach { (result) in
-            lines.append("\(result.id),\(result.test),\(result.scannedDevice),\(result.scannedTEK),\(result.timestamp),\(result.exposureWindowID),\(result.exposureWindowTimestamp), \(result.calibrationConfidence),\(result.scanInstanceId),\(result.minAttenuation),\(result.typicalAttenuation),\(result.secondsSinceLastScan)")
+            let scanInstanceId = result.scanInstanceId != nil ? "\(result.scanInstanceId ?? "")" : ""
+            let minAttenuation = result.minAttenuation != nil ? "\(result.minAttenuation ?? 0)" : ""
+            let typicalAttenuation = result.typicalAttenuation != nil ? "\(result.typicalAttenuation ?? 0)" : ""
+            let secondsSinceLastScan = result.secondsSinceLastScan != nil ? "\(result.secondsSinceLastScan ?? 0)" : ""
+            
+            lines.append("\(result.id),\(result.test),\(result.scannedDevice),\(result.scannedTEK),\(result.timestamp),\(result.exposureWindowID),\(result.exposureWindowTimestamp), \(result.calibrationConfidence),\(scanInstanceId),\(minAttenuation),\(typicalAttenuation),\(secondsSinceLastScan)")
         }
         
         let fileManager = FileManager.default
@@ -106,11 +111,32 @@ class ReceiverViewController: UIViewController {
         
         let testResultID = UUID()
         
-        let newTestResults: [TestResult] = exposureWindows.flatMap { (window) in
-            window.scanInstances.compactMap { (scan) in
-                let windowID = UUID()
+        var newTestResults = [TestResult]()
+        
+        exposureWindows.forEach { (window) in
+            
+            let windowID = UUID()
+            
+            if window.scanInstances.isEmpty {
+                newTestResults.append(TestResult(
+                    id: testResultID.uuidString,
+                    test: scannedKey.testId,
+                    scannedDevice: scannedKey.deviceId,
+                    scannedTEK: scannedKey.keyData.base64EncodedString(),
+                    timestamp: Date().timeIntervalSince1970,
+                    exposureWindowID: windowID.uuidString,
+                    exposureWindowTimestamp: window.date.timeIntervalSince1970,
+                    calibrationConfidence: Int(window.calibrationConfidence.rawValue),
+                    scanInstanceId: nil,
+                    minAttenuation: nil,
+                    typicalAttenuation: nil,
+                    secondsSinceLastScan: nil
+                ))
+            }
+            
+            window.scanInstances.forEach { (scan) in
                 
-                return TestResult(
+                newTestResults.append(TestResult(
                     id: testResultID.uuidString,
                     test: scannedKey.testId,
                     scannedDevice: scannedKey.deviceId,
@@ -123,7 +149,7 @@ class ReceiverViewController: UIViewController {
                     minAttenuation: scan.minimumAttenuation,
                     typicalAttenuation: scan.typicalAttenuation,
                     secondsSinceLastScan: scan.secondsSinceLastScan
-                )
+                ))
             }
         }
         
@@ -157,9 +183,17 @@ extension ReceiverViewController: UITableViewDataSource {
         cellContent.append("<b>Scanned Device:</b> \(testResult.scannedDevice)<br />")
         cellContent.append("<b>QR Scanned:</b> \(Date(timeIntervalSince1970: testResult.timestamp))<br />")
         cellContent.append("<b>TEK:</b> \(testResult.scannedTEK)<br />")
-        cellContent.append("<b>Attenuation:</b> min:\(testResult.minAttenuation) Db, typical:\(testResult.typicalAttenuation) Db<br />")
-        cellContent.append("<b>SecondsSinceLastScan:</b>\(testResult.secondsSinceLastScan) s<br />")
-        cellContent.append("<b>ExpWindowTime:</b>\(Date(timeIntervalSince1970: testResult.exposureWindowTimestamp))")
+        
+        if let minAttenuation = testResult.minAttenuation,
+           let typicalAttenuation = testResult.typicalAttenuation,
+           let secondsSinceLastScan = testResult.secondsSinceLastScan {
+            
+            cellContent.append("<b>Attenuation:</b> min:\(minAttenuation) Db, typical:\(typicalAttenuation) Db<br />")
+            cellContent.append("<b>SecondsSinceLastScan:</b>\(secondsSinceLastScan) s<br />")
+            cellContent.append("<b>ExpWindowTime:</b>\(Date(timeIntervalSince1970: testResult.exposureWindowTimestamp))")
+        } else {
+            cellContent.append("no scan results")
+        }
         
         let data = cellContent.joined().data(using: String.Encoding.utf16, allowLossyConversion: false)!
         

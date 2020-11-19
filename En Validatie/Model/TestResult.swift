@@ -14,12 +14,12 @@ struct TestResult: Codable {
     let test: String
     let scannedDevice: String
     let scannedTEK: String
-    let timestamp: Double //?
+    let timestamp: Double
     let exposureWindowID: String
-    let exposureWindowTimestamp: Double //?
+    let exposureWindowTimestamp: Double
     let calibrationConfidence: Int
-    let scanInstanceId: String
-    let minAttenuation: ENAttenuation
-    let typicalAttenuation: ENAttenuation
-    let secondsSinceLastScan: Int
+    let scanInstanceId: String?
+    let minAttenuation: ENAttenuation?
+    let typicalAttenuation: ENAttenuation?
+    let secondsSinceLastScan: Int?
 }

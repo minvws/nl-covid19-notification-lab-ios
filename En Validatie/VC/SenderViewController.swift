@@ -15,6 +15,7 @@ class SenderViewController: UIViewController, UITextFieldDelegate {
     @IBOutlet weak var textFieldTestId: UITextField!
     @IBOutlet weak var labelDeviceName: UILabel!
     @IBOutlet weak var labelTEK: UILabel!
+    @IBOutlet weak var LabelAPIVersion: UILabel!
     
     private var keyValueObservers = [NSKeyValueObservation]()
     
@@ -29,8 +30,9 @@ class SenderViewController: UIViewController, UITextFieldDelegate {
     override func viewDidLoad() {
         super.viewDidLoad()
         textFieldTestId.delegate = self
-        textFieldTestId.text = "Some Experiment" // for easier testing only. remove later
         labelDeviceName.text = UIDevice.current.name
+        let apiVersion = Config.infoDictionary["ENAPIVersion"] as? NSNumber
+        LabelAPIVersion.text = "\(apiVersion?.intValue ?? 1)"
     }
     
     @IBAction func generateQRCode(_ sender: Any) {

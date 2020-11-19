@@ -9,7 +9,7 @@ import UIKit
 import Foundation
 
 public enum Config {
-  private static let infoDictionary: [String: Any] = {
+  static let infoDictionary: [String: Any] = {
     guard let dict = Bundle.main.infoDictionary else {
       fatalError("File not found")
     }
