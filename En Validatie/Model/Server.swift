@@ -29,6 +29,9 @@ class Server {
     @Persisted(userDefaultsKey: "diagnosisKey", notificationName: .init("ServerDiagnosisKeysDidChange"), defaultValue: nil)
     var diagnosisKey: CodableDiagnosisKey?
     
+    @Persisted(userDefaultsKey: "scannedDiagnosisKeys", notificationName: .init("ServerSCannedDiagnosisKeysDidChange"), defaultValue: [])
+    var scannedDiagnosisKeys: [String]
+    
     
     /// Stores the passed Diagnosiskey in local storage and generates and saves a binary and signature pair of files based on that locally stored diagnosis keys
     /// - Parameters:
@@ -50,7 +53,13 @@ class Server {
         }
     }
     
-    /// Generates and saves a binary and signature pair of files based on `diagnosisKeys`
+    func clearData() {
+        scannedDiagnosisKeys = []
+        diagnosisKey = nil
+        diagnosisKeyURL = nil
+    }
+    
+    /// Generates and saves a binary and signature pair of files based on `diagnosisKey`
     /// - Parameter completion: Called when action is completed, parameter contains the local URL of the downloaded diagnosis key file ('.bin') or an error when it failed
     private func downloadDiagnosisKeyFile(diagnosisKey: CodableDiagnosisKey, completion: (Result<URL, Error>) -> Void) {
         
@@ -59,7 +68,7 @@ class Server {
             let signatureInfo = SignatureInfo.with { signatureInfo in
                 signatureInfo.verificationKeyVersion = "v1"
                 signatureInfo.verificationKeyID = "204"
-                signatureInfo.signatureAlgorithm = "SHA256withECDSA"
+                signatureInfo.signatureAlgorithm = "1.2.840.10045.4.3.2"
             }
             
             // In a real implementation, the file at remoteURL would be downloaded from a server

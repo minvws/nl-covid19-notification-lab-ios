@@ -9,7 +9,7 @@ import UIKit
 import ExposureNotification
 import CoreBluetooth
 
-class ReceiverViewController: UIViewController {
+class ReceiverViewController: UIViewController, ScannerViewControllerDelegate {
     
     @IBOutlet weak var tableView: UITableView!
     @IBOutlet weak var shareButton: UIBarButtonItem!
@@ -20,29 +20,27 @@ class ReceiverViewController: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        NotificationCenter.default.addObserver(self, selector: #selector(onScannedQR(_:)), name: Server.shared.$diagnosisKeyURL.notificationName, object: nil)
-        
+                
         updateUI()
     }
-    
-    deinit {
-        NotificationCenter.default.removeObserver(self, name: Server.shared.$diagnosisKeyURL.notificationName, object: nil)
-    }
-    
+        
     @IBAction func scanQrClick(_ sender: Any) {
         guard ExposureManager.shared.manager.exposureNotificationEnabled else {
             showDialog(title: "Error", message: "Scanning a TEK QR Code is only possible if the Exposure Notification framework is enabled. Toggle it on the 'Status' screen.")
             return
         }
         
-        self.present(ScannerViewController(), animated: true, completion: nil)
+        let scanner = ScannerViewController()
+        scanner.delegate = self
+        self.present(scanner, animated: true, completion: nil)
     }
     
     @IBAction func trashClick(_ sender: Any) {
-        let alert = UIAlertController(title: "Warning", message: "This will delete all stored testdata! This operation CANNOT be undone. Make sure you export any data you want to keep first.", preferredStyle: .alert)
+        let alert = UIAlertController(title: "Warning", message: "This will delete all data stored within the app! This will NOT remove the EN logs on the device. This operation CANNOT be undone. Make sure you export any data you want to keep first.", preferredStyle: .alert)
         alert.addAction(UIAlertAction(title: "Cancel", style: .cancel, handler: nil))
         alert.addAction(UIAlertAction(title: "Delete", style: .destructive, handler: { _ in
             self.testResults = []
+            Server.shared.clearData()
             self.updateUI()
         }))
         self.present(alert, animated: true, completion: nil)
@@ -83,14 +81,21 @@ class ReceiverViewController: UIViewController {
         deleteButton.isEnabled = !testResults.isEmpty
     }
     
-    
     /// Called when `ScannerViewController` has successfully scanned a TEK QR code. The scanned diagnosiskey will be stored in Server.shared.diagnosisKey at this point.
-    @objc func onScannedQR(_ notification: Notification) {
+    func onKeyScanned() {
         
         guard let scannedKey = Server.shared.diagnosisKey else {
             self.showDialog(title: "Error", message: "No scanned diagnosiskey found")
             return
         }
+        
+        let keyBase64 = scannedKey.keyData.base64EncodedString()
+        guard !Server.shared.scannedDiagnosisKeys.contains(keyBase64) else {
+            self.showDialog(title: "Error", message: "TEK was already scanned before, not processing")
+            return
+        }
+        
+        Server.shared.scannedDiagnosisKeys.append(keyBase64)
         
         ExposureManager.shared.getExposureWindows { result in
             
@@ -162,10 +167,12 @@ class ReceiverViewController: UIViewController {
     }
     
     private func showDialog(title: String = "Info", message:String) {
-        let alert = UIAlertController(title: "Info", message: "", preferredStyle: .alert)
-        alert.addAction(UIAlertAction(title: "OK", style: .destructive, handler: nil))
-        alert.message = message
-        self.present(alert, animated: true, completion: nil)
+        DispatchQueue.main.async {
+            let alert = UIAlertController(title: "Info", message: "", preferredStyle: .alert)
+            alert.addAction(UIAlertAction(title: "OK", style: .destructive, handler: nil))
+            alert.message = message
+            self.present(alert, animated: true, completion: nil)
+        }
     }
 }
 

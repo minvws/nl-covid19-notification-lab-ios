@@ -8,8 +8,12 @@
 import AVFoundation
 import UIKit
 
+protocol ScannerViewControllerDelegate: AnyObject {
+    func onKeyScanned()
+}
 class ScannerViewController: UIViewController, AVCaptureMetadataOutputObjectsDelegate {
     
+    weak var delegate: ScannerViewControllerDelegate?
     private var captureSession: AVCaptureSession!
     private var previewLayer: AVCaptureVideoPreviewLayer!
     
@@ -81,6 +85,7 @@ class ScannerViewController: UIViewController, AVCaptureMetadataOutputObjectsDel
             let diagnosisKey = try JSONDecoder().decode(CodableDiagnosisKey.self, from: code.data(using: .utf8)!)
             Server.shared.postDiagnosisKeys(diagnosisKey) { error in
                 if(error == nil) {
+                    self.delegate?.onKeyScanned()
                     dismiss(animated: true, completion: nil)
                 } else {
                     showDialog(message: "\(String(describing: error))")
