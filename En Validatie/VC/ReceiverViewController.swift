@@ -30,6 +30,11 @@ class ReceiverViewController: UIViewController {
     }
     
     @IBAction func scanQrClick(_ sender: Any) {
+        guard ExposureManager.shared.manager.exposureNotificationEnabled else {
+            showDialog(title: "Error", message: "Scanning a TEK QR Code is only possible if the Exposure Notification framework is enabled. Toggle it on the 'Status' screen.")
+            return
+        }
+        
         self.present(ScannerViewController(), animated: true, completion: nil)
     }
     
@@ -53,7 +58,7 @@ class ReceiverViewController: UIViewController {
             let typicalAttenuation = result.typicalAttenuation != nil ? "\(result.typicalAttenuation ?? 0)" : ""
             let secondsSinceLastScan = result.secondsSinceLastScan != nil ? "\(result.secondsSinceLastScan ?? 0)" : ""
             
-            lines.append("\(result.id),\(result.test),\(result.scannedDevice),\(result.scannedTEK),\(result.timestamp),\(result.exposureWindowID),\(result.exposureWindowTimestamp), \(result.calibrationConfidence),\(scanInstanceId),\(minAttenuation),\(typicalAttenuation),\(secondsSinceLastScan)")
+            lines.append("\(result.id),\(result.test),\(result.scannedDevice),\(result.scannedTEK),\(result.timestamp),\(result.exposureWindowID),\(result.exposureWindowTimestamp),\(result.calibrationConfidence),\(scanInstanceId),\(minAttenuation),\(typicalAttenuation),\(secondsSinceLastScan)")
         }
         
         let fileManager = FileManager.default

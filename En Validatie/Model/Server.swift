@@ -43,11 +43,9 @@ class Server {
             case let .success(url):
                 self.diagnosisKeyURL = url
                 completion(nil)
-                break;
             case let .failure(error):
                 print(error)
                 completion(error)
-                break;
             }
         }
     }

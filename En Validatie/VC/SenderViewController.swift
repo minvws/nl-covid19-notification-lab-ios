@@ -32,13 +32,14 @@ class SenderViewController: UIViewController, UITextFieldDelegate {
         textFieldTestId.delegate = self
         labelDeviceName.text = UIDevice.current.name
         let apiVersion = Config.infoDictionary["ENAPIVersion"] as? NSNumber
-        LabelAPIVersion.text = "\(apiVersion?.intValue ?? 1)"
+        LabelAPIVersion.text = "v\(apiVersion?.intValue ?? 1)"
     }
     
     @IBAction func generateQRCode(_ sender: Any) {
         
         guard let testId = textFieldTestId.text, !testId.isEmpty else {
             showDialog(message: "Please enter a Test id")
+            clearQRCode()
             return
         }
                 
@@ -49,6 +50,7 @@ class SenderViewController: UIViewController, UITextFieldDelegate {
             case let .success(keys):
                 guard let firstKey = keys.first, keys.count == 1 else {
                     self.showDialog(message: "You have \(keys.count) keys. Make sure you have 1 key")
+                    self.clearQRCode()
                     return
                 }
                 
@@ -70,6 +72,7 @@ class SenderViewController: UIViewController, UITextFieldDelegate {
             case let .failure(error):
                 print(error)
                 self.showDialog(title: "Error", message: "\(error)")
+                self.clearQRCode()
             }
         }
     }
@@ -93,6 +96,11 @@ class SenderViewController: UIViewController, UITextFieldDelegate {
         alert.addAction(UIAlertAction(title: "OK", style: .destructive, handler: nil))
         alert.message = message
         present(alert, animated: true, completion: nil)
+    }
+    
+    private func clearQRCode() {
+        labelTEK.text = nil
+        imageViewQr.image = nil
     }
     
     private func generateQrCode(code: String) {

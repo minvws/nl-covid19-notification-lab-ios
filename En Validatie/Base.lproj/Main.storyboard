@@ -162,8 +162,8 @@
                                     <stackView opaque="NO" contentMode="scaleToFill" distribution="equalSpacing" translatesAutoresizingMaskIntoConstraints="NO" id="cvq-WC-6DO">
                                         <rect key="frame" x="0.0" y="40.5" width="374" height="31"/>
                                         <subviews>
-                                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Exposure notification" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="eUh-pO-2gA">
-                                                <rect key="frame" x="0.0" y="0.0" width="160" height="31"/>
+                                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Exposure Notification" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="eUh-pO-2gA">
+                                                <rect key="frame" x="0.0" y="0.0" width="163" height="31"/>
                                                 <fontDescription key="fontDescription" type="system" pointSize="17"/>
                                                 <nil key="textColor"/>
                                                 <nil key="highlightedColor"/>
@@ -174,7 +174,7 @@
                                                     <constraint firstAttribute="height" constant="31" id="0v6-ef-7Rx"/>
                                                     <constraint firstAttribute="width" constant="49" id="vLg-nx-UUe"/>
                                                 </constraints>
-                                                <color key="onTintColor" name="Primary"/>
+                                                <color key="onTintColor" systemColor="systemGreenColor"/>
                                                 <connections>
                                                     <action selector="switchChanged:" destination="n86-2P-iHb" eventType="valueChanged" id="Szv-W5-dZU"/>
                                                 </connections>
@@ -268,6 +268,9 @@
         </namedColor>
         <systemColor name="systemBackgroundColor">
             <color white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+        </systemColor>
+        <systemColor name="systemGreenColor">
+            <color red="0.20392156862745098" green="0.7803921568627451" blue="0.34901960784313724" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
         </systemColor>
     </resources>
 </document>
