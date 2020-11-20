@@ -48,7 +48,7 @@ class ReceiverViewController: UIViewController, ScannerViewControllerDelegate {
     
     @IBAction func shareClick(_ sender: Any) {
         
-        var lines = ["Id,Test,Scanned device,Scanned TEK,Timestamp,Exposure window id,Exposure window timestamp,Calibration confidence,Scan instance id,Min attenuation,Typical attenuation,Seconds since last scan"]
+        var lines = ["Id,Test,Scanning Device,Scanned device,Scanned TEK,Timestamp,Exposure window id,Exposure window timestamp,Calibration confidence,Scan instance id,Min attenuation,Typical attenuation,Seconds since last scan"]
         
         testResults.forEach { (result) in
             let scanInstanceId = result.scanInstanceId != nil ? "\(result.scanInstanceId ?? "")" : ""
@@ -59,7 +59,7 @@ class ReceiverViewController: UIViewController, ScannerViewControllerDelegate {
             let exposureWindowTimestamp = result.exposureWindowTimestamp != nil ? "\(result.exposureWindowTimestamp ?? 0)" : ""
             let calibrationConfidence = result.calibrationConfidence != nil ? "\(result.calibrationConfidence ?? 0)" : ""
             
-            lines.append("\(result.id),\(result.test),\(result.scannedDevice),\(result.scannedTEK),\(result.timestamp),\(exposureWindowID),\(exposureWindowTimestamp),\(calibrationConfidence),\(scanInstanceId),\(minAttenuation),\(typicalAttenuation),\(secondsSinceLastScan)")
+            lines.append("\(result.id),\(result.test),\(UIDevice.current.name),\(result.scannedDevice),\(result.scannedTEK),\(result.timestamp),\(exposureWindowID),\(exposureWindowTimestamp),\(calibrationConfidence),\(scanInstanceId),\(minAttenuation),\(typicalAttenuation),\(secondsSinceLastScan)")
         }
         
         let fileManager = FileManager.default
@@ -200,6 +200,7 @@ extension ReceiverViewController: UITableViewDataSource {
         
         cellContent.append("<style>body{font-size:16px;}</style>")
         cellContent.append("<b>Test:</b> \(testResult.test)<br />")
+        cellContent.append("<b>Scanning Device:</b> \(UIDevice.current.name)<br />")
         cellContent.append("<b>Scanned Device:</b> \(testResult.scannedDevice)<br />")
         cellContent.append("<b>QR Scanned:</b> \(Date(timeIntervalSince1970: testResult.timestamp))<br />")
         cellContent.append("<b>TEK:</b> \(testResult.scannedTEK)<br />")
