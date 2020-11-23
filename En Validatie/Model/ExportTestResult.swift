@@ -1,5 +1,5 @@
 //
-//  TestResult.swift
+//  ExportTestResult.swift
 //  En Validatie
 //
 //  Created by Roel Spruit on 18/11/2020.
@@ -9,7 +9,7 @@
 import Foundation
 import ExposureNotification
 
-struct TestResult: Codable {
+struct ExportTestResult: Codable {
     let id: String
     let test: String
     let scanningDevice: String
@@ -20,7 +20,7 @@ struct TestResult: Codable {
     let exposureWindowTimestamp: Double?
     let calibrationConfidence: Int?
     let scanInstanceId: String?
-    let minAttenuation: ENAttenuation?
-    let typicalAttenuation: ENAttenuation?
+    let minAttenuation: Int?
+    let typicalAttenuation: Int?
     let secondsSinceLastScan: Int?
 }

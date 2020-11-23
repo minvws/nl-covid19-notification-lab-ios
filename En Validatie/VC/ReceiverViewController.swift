@@ -16,7 +16,7 @@ class ReceiverViewController: UIViewController, ScannerViewControllerDelegate {
     @IBOutlet weak var deleteButton: UIBarButtonItem!
     
     @Persisted(userDefaultsKey: "testResults", notificationName: .init("TestResultsDidChange"), defaultValue: [])
-    var testResults: [TestResult]
+    var testResults: [ScanTestResult]
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -48,9 +48,11 @@ class ReceiverViewController: UIViewController, ScannerViewControllerDelegate {
     
     @IBAction func shareClick(_ sender: Any) {
         
+        let exportedTestResults = testResults.flatMap { self.generateExportTestResults(from: $0) }
+        
         var lines = ["Id,Test,Scanning Device,Scanned device,Scanned TEK,Timestamp,Exposure window id,Exposure window timestamp,Calibration confidence,Scan instance id,Min attenuation,Typical attenuation,Seconds since last scan"]
         
-        testResults.forEach { (result) in
+        exportedTestResults.forEach { (result) in
             let scanInstanceId = result.scanInstanceId != nil ? "\(result.scanInstanceId ?? "")" : ""
             let minAttenuation = result.minAttenuation != nil ? "\(result.minAttenuation ?? 0)" : ""
             let typicalAttenuation = result.typicalAttenuation != nil ? "\(result.typicalAttenuation ?? 0)" : ""
@@ -65,7 +67,7 @@ class ReceiverViewController: UIViewController, ScannerViewControllerDelegate {
         let fileManager = FileManager.default
         do {
             let path = try fileManager.url(for: .documentDirectory, in: .allDomainsMask, appropriateFor: nil, create: false)
-            let fileURL = path.appendingPathComponent("testresults.csv")
+            let fileURL = path.appendingPathComponent("labapp_export_\(UIDevice.current.name).csv")
             try lines.joined(separator: "\n").write(to: fileURL, atomically: true, encoding: .utf8)
             
             let objectsToShare = [fileURL]
@@ -101,27 +103,42 @@ class ReceiverViewController: UIViewController, ScannerViewControllerDelegate {
                 
             case let .success(exposureWindows):
                 
-                self.generateTestResults(scannedKey: scannedKey, exposureWindows: exposureWindows)
+                let scanTestResult = ScanTestResult(
+                    id: UUID().uuidString,
+                    scannedTek: scannedKey.keyData.base64EncodedString(),
+                    scanningDeviceId: UIDevice.current.name,
+                    scannedDeviceId: scannedKey.deviceId,
+                    testId: scannedKey.testId,
+                    timestamp: Date().timeIntervalSince1970,
+                    exposureWindows: exposureWindows.map(CodableExposureWindow.init)
+                )
+                
+                self.testResults.append(scanTestResult)
+                self.testResults.sort { (a, b) -> Bool in
+                    a.timestamp > b.timestamp
+                }
+                
+//                self.generateTestResults(scannedKey: scannedKey, exposureWindows: exposureWindows)
                 
                 self.updateUI()
             }
         }
     }
     
-    private func generateTestResults(scannedKey: CodableDiagnosisKey, exposureWindows: [ENExposureWindow]) {
+    private func generateExportTestResults(from testResult: ScanTestResult) -> [ExportTestResult] {
         
-        let testResultID = UUID()
+        var newTestResults = [ExportTestResult]()
         
-        var newTestResults = [TestResult]()
         let resultGenerationTimeStamp = Date().timeIntervalSince1970
-        if exposureWindows.isEmpty {
-            newTestResults.append(TestResult(
-                id: testResultID.uuidString,
-                test: scannedKey.testId,
+        
+        if testResult.exposureWindows.isEmpty {
+            newTestResults.append(ExportTestResult(
+                id: testResult.id,
+                test: testResult.testId,
                 scanningDevice: UIDevice.current.name,
-                scannedDevice: scannedKey.deviceId,
-                scannedTEK: scannedKey.keyData.base64EncodedString(),
-                timestamp: resultGenerationTimeStamp,
+                scannedDevice: testResult.scannedDeviceId,
+                scannedTEK: testResult.scannedTek,
+                timestamp: testResult.timestamp,
                 exposureWindowID: nil,
                 exposureWindowTimestamp: nil,
                 calibrationConfidence: nil,
@@ -132,21 +149,21 @@ class ReceiverViewController: UIViewController, ScannerViewControllerDelegate {
             ))
         }
         
-        exposureWindows.forEach { (window) in
+        testResult.exposureWindows.forEach { (window) in
             
             let windowID = UUID()
             
             if window.scanInstances.isEmpty {
-                newTestResults.append(TestResult(
-                    id: testResultID.uuidString,
-                    test: scannedKey.testId,
-                    scanningDevice: UIDevice.current.name,
-                    scannedDevice: scannedKey.deviceId,
-                    scannedTEK: scannedKey.keyData.base64EncodedString(),
+                newTestResults.append(ExportTestResult(
+                    id: testResult.id,
+                    test: testResult.testId,
+                    scanningDevice: testResult.scanningDeviceId,
+                    scannedDevice: testResult.scannedDeviceId,
+                    scannedTEK: testResult.scannedTek,
                     timestamp: resultGenerationTimeStamp,
                     exposureWindowID: windowID.uuidString,
                     exposureWindowTimestamp: window.date.timeIntervalSince1970,
-                    calibrationConfidence: Int(window.calibrationConfidence.rawValue),
+                    calibrationConfidence: Int(window.calibrationConfidence),
                     scanInstanceId: nil,
                     minAttenuation: nil,
                     typicalAttenuation: nil,
@@ -154,18 +171,19 @@ class ReceiverViewController: UIViewController, ScannerViewControllerDelegate {
                 ))
             }
             
+            
             window.scanInstances.forEach { (scan) in
                 
-                newTestResults.append(TestResult(
-                    id: testResultID.uuidString,
-                    test: scannedKey.testId,
-                    scanningDevice: UIDevice.current.name,
-                    scannedDevice: scannedKey.deviceId,
-                    scannedTEK: scannedKey.keyData.base64EncodedString(),
+                newTestResults.append(ExportTestResult(
+                    id: testResult.id,
+                    test: testResult.testId,
+                    scanningDevice: testResult.scanningDeviceId,
+                    scannedDevice: testResult.scannedDeviceId,
+                    scannedTEK: testResult.scannedTek,
                     timestamp: resultGenerationTimeStamp,
                     exposureWindowID: windowID.uuidString,
                     exposureWindowTimestamp: window.date.timeIntervalSince1970,
-                    calibrationConfidence: Int(window.calibrationConfidence.rawValue),
+                    calibrationConfidence: Int(window.calibrationConfidence),
                     scanInstanceId: UUID().uuidString,
                     minAttenuation: scan.minimumAttenuation,
                     typicalAttenuation: scan.typicalAttenuation,
@@ -174,7 +192,7 @@ class ReceiverViewController: UIViewController, ScannerViewControllerDelegate {
             }
         }
         
-        testResults.append(contentsOf: newTestResults)
+        return newTestResults
     }
     
     private func showDialog(title: String = "Info", message:String) {
@@ -202,22 +220,18 @@ extension ReceiverViewController: UITableViewDataSource {
         var cellContent = [String]()
         
         cellContent.append("<style>body{font-size:16px;}</style>")
-        cellContent.append("<b>Test:</b> \(testResult.test)<br />")
-        cellContent.append("<b>Scanning Device:</b> \(UIDevice.current.name)<br />")
-        cellContent.append("<b>Scanned Device:</b> \(testResult.scannedDevice)<br />")
+        cellContent.append("<b>Test:</b> \(testResult.testId)<br />")
+        cellContent.append("<b>Scanning Device:</b> \(testResult.scanningDeviceId)<br />")
+        cellContent.append("<b>Scanned Device:</b> \(testResult.scannedDeviceId)<br />")
         cellContent.append("<b>QR Scanned:</b> \(Date(timeIntervalSince1970: testResult.timestamp))<br />")
-        cellContent.append("<b>TEK:</b> \(testResult.scannedTEK)<br />")
+        cellContent.append("<b>TEK:</b> \(testResult.scannedTek)<br />")
         
-        if let minAttenuation = testResult.minAttenuation,
-           let typicalAttenuation = testResult.typicalAttenuation,
-           let secondsSinceLastScan = testResult.secondsSinceLastScan,
-           let exposureWindowTimestamp = testResult.exposureWindowTimestamp {
-            
-            cellContent.append("<b>Attenuation:</b> min:\(minAttenuation) Db, typical:\(typicalAttenuation) Db<br />")
-            cellContent.append("<b>SecondsSinceLastScan:</b>\(secondsSinceLastScan) s<br />")
-            cellContent.append("<b>ExpWindowTime:</b>\(Date(timeIntervalSince1970: exposureWindowTimestamp))")
+        if testResult.allScanInstances.isEmpty {
+            cellContent.append("<b>Scans: </b>No scaninstances found")
         } else {
-            cellContent.append("No exposure windows or scaninstances found")
+            cellContent.append("<b>Attenuation:</b> min:\(testResult.minAttenuation) Db, typical:\(testResult.averageAttenuation) Db<br />")
+            cellContent.append("<b>Duration:</b>\(testResult.duration) s<br />")
+            cellContent.append("<b>Scans:</b>\(testResult.allScanInstances.count)")
         }
         
         let data = cellContent.joined().data(using: String.Encoding.utf16, allowLossyConversion: false)!
@@ -234,4 +248,16 @@ extension ReceiverViewController: UITableViewDataSource {
         
         return cell
     }
+}
+
+extension Sequence where Element: AdditiveArithmetic {
+    /// Returns the total sum of all elements in the sequence
+    func sum() -> Element { reduce(.zero, +) }
+}
+
+extension Collection where Element: BinaryInteger {
+    /// Returns the average of all elements in the array
+    func average() -> Element { isEmpty ? .zero : sum() / Element(count) }
+    /// Returns the average of all elements in the array as Floating Point type
+    func average<T: FloatingPoint>() -> T { isEmpty ? .zero : T(sum()) / T(count) }
 }
