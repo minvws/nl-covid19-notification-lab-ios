@@ -59,7 +59,7 @@ class ReceiverViewController: UIViewController, ScannerViewControllerDelegate {
             let exposureWindowTimestamp = result.exposureWindowTimestamp != nil ? "\(result.exposureWindowTimestamp ?? 0)" : ""
             let calibrationConfidence = result.calibrationConfidence != nil ? "\(result.calibrationConfidence ?? 0)" : ""
             
-            lines.append("\(result.id),\(result.test),\(UIDevice.current.name),\(result.scannedDevice),\(result.scannedTEK),\(result.timestamp),\(exposureWindowID),\(exposureWindowTimestamp),\(calibrationConfidence),\(scanInstanceId),\(minAttenuation),\(typicalAttenuation),\(secondsSinceLastScan)")
+            lines.append("\(result.id),\(result.test),\(result.scanningDevice),\(result.scannedDevice),\(result.scannedTEK),\(result.timestamp),\(exposureWindowID),\(exposureWindowTimestamp),\(calibrationConfidence),\(scanInstanceId),\(minAttenuation),\(typicalAttenuation),\(secondsSinceLastScan)")
         }
         
         let fileManager = FileManager.default
@@ -118,6 +118,7 @@ class ReceiverViewController: UIViewController, ScannerViewControllerDelegate {
             newTestResults.append(TestResult(
                 id: testResultID.uuidString,
                 test: scannedKey.testId,
+                scanningDevice: UIDevice.current.name,
                 scannedDevice: scannedKey.deviceId,
                 scannedTEK: scannedKey.keyData.base64EncodedString(),
                 timestamp: resultGenerationTimeStamp,
@@ -139,6 +140,7 @@ class ReceiverViewController: UIViewController, ScannerViewControllerDelegate {
                 newTestResults.append(TestResult(
                     id: testResultID.uuidString,
                     test: scannedKey.testId,
+                    scanningDevice: UIDevice.current.name,
                     scannedDevice: scannedKey.deviceId,
                     scannedTEK: scannedKey.keyData.base64EncodedString(),
                     timestamp: resultGenerationTimeStamp,
@@ -157,6 +159,7 @@ class ReceiverViewController: UIViewController, ScannerViewControllerDelegate {
                 newTestResults.append(TestResult(
                     id: testResultID.uuidString,
                     test: scannedKey.testId,
+                    scanningDevice: UIDevice.current.name,
                     scannedDevice: scannedKey.deviceId,
                     scannedTEK: scannedKey.keyData.base64EncodedString(),
                     timestamp: resultGenerationTimeStamp,

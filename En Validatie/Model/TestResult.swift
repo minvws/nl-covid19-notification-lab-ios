@@ -12,6 +12,7 @@ import ExposureNotification
 struct TestResult: Codable {
     let id: String
     let test: String
+    let scanningDevice: String
     let scannedDevice: String
     let scannedTEK: String
     let timestamp: Double

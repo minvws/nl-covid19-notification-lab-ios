@@ -16,7 +16,6 @@ struct CodableDiagnosisKey: Codable, Equatable {
     let transmissionRiskLevel: ENRiskLevel
     let testId:String
     let deviceId:String
-    let daysSinceOnsetOfSymptoms:Int
 }
 
 class Server {
@@ -80,7 +79,7 @@ class Server {
                         temporaryExposureKey.transmissionRiskLevel = Int32(diagnosisKey.transmissionRiskLevel)
                         temporaryExposureKey.rollingStartIntervalNumber = Int32(diagnosisKey.rollingStartNumber)
                         temporaryExposureKey.rollingPeriod = Int32(diagnosisKey.rollingPeriod)
-                        temporaryExposureKey.daysSinceOnsetOfSymptoms = Int32(diagnosisKey.daysSinceOnsetOfSymptoms)
+                        temporaryExposureKey.daysSinceOnsetOfSymptoms = 2
                     }
                 }
             }

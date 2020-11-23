@@ -63,8 +63,7 @@ class SenderViewController: UIViewController, UITextFieldDelegate {
                     rollingStartNumber: firstKey.rollingStartNumber,
                     transmissionRiskLevel: firstKey.transmissionRiskLevel,
                     testId: testId,
-                    deviceId: UIDevice.current.name,
-                    daysSinceOnsetOfSymptoms: 2
+                    deviceId: UIDevice.current.name
                 )
                 
                 let jsonData = try! JSONEncoder().encode(key)
