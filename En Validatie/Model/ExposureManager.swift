@@ -36,7 +36,7 @@ class ExposureManager {
             
             switch result {
             case let .success(configuration):
-                
+   
                 ExposureManager.shared.manager.detectExposures(configuration: configuration, diagnosisKeyURLs: [diagnosisKeyURL]) { summary, error in
                     
                     if let error = error {

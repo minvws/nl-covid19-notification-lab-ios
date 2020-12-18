@@ -103,6 +103,8 @@ class ReceiverViewController: UIViewController, ScannerViewControllerDelegate {
                 
             case let .success(exposureWindows):
                 
+                let allExposureWindows = exposureWindows.map(CodableExposureWindow.init)
+                                
                 let scanTestResult = ScanTestResult(
                     id: UUID().uuidString,
                     scannedTek: scannedKey.keyData.base64EncodedString(),
@@ -110,15 +112,11 @@ class ReceiverViewController: UIViewController, ScannerViewControllerDelegate {
                     scannedDeviceId: scannedKey.deviceId,
                     testId: scannedKey.testId,
                     timestamp: Date().timeIntervalSince1970,
-                    exposureWindows: exposureWindows.map(CodableExposureWindow.init)
+                    exposureWindows: allExposureWindows
                 )
                 
                 self.testResults.append(scanTestResult)
-                self.testResults.sort { (a, b) -> Bool in
-                    a.timestamp > b.timestamp
-                }
-                
-//                self.generateTestResults(scannedKey: scannedKey, exposureWindows: exposureWindows)
+                self.testResults = self.testResults.sortedNewToOld
                 
                 self.updateUI()
             }
@@ -205,6 +203,24 @@ class ReceiverViewController: UIViewController, ScannerViewControllerDelegate {
     }
 }
 
+extension ReceiverViewController: UITableViewDelegate {
+    
+    func tableView(_ tableView: UITableView, canEditRowAt indexPath: IndexPath) -> Bool {
+        return true
+    }
+    
+    func tableView(_ tableView: UITableView, editingStyleForRowAt indexPath: IndexPath) -> UITableViewCell.EditingStyle {
+        return .delete
+    }
+    
+    func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCell.EditingStyle, forRowAt indexPath: IndexPath) {
+        if editingStyle == .delete {
+            testResults.remove(at: indexPath.row)
+            tableView.reloadData()
+        }
+    }
+}
+
 extension ReceiverViewController: UITableViewDataSource {
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         return testResults.count
@@ -260,4 +276,18 @@ extension Collection where Element: BinaryInteger {
     func average() -> Element { isEmpty ? .zero : sum() / Element(count) }
     /// Returns the average of all elements in the array as Floating Point type
     func average<T: FloatingPoint>() -> T { isEmpty ? .zero : T(sum()) / T(count) }
+}
+
+extension Collection where Element == ScanTestResult {
+    var sortedOldToNew: [ScanTestResult] {
+        self.sorted { (a, b) -> Bool in
+            a.timestamp < b.timestamp
+        }
+    }
+    
+    var sortedNewToOld: [ScanTestResult] {
+        self.sorted { (a, b) -> Bool in
+            a.timestamp > b.timestamp
+        }
+    }
 }
