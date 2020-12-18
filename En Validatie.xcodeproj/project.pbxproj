@@ -25,10 +25,22 @@
 		D2FD69CF247D46E800BA7EA1 /* LocalStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = D2FD69CE247D46E800BA7EA1 /* LocalStore.swift */; };
 		D2FD69D1247D4ADF00BA7EA1 /* ScannerViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = D2FD69D0247D4ADF00BA7EA1 /* ScannerViewController.swift */; };
 		D2FD69D4247D860800BA7EA1 /* SenderViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = D2FD69D3247D860800BA7EA1 /* SenderViewController.swift */; };
+		F44A210E258CDAD10056E9E6 /* TestResultExporter.swift in Sources */ = {isa = PBXBuildFile; fileRef = F44A210D258CDAD10056E9E6 /* TestResultExporter.swift */; };
+		F44A2124258CDB620056E9E6 /* TestResultExporterTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = F44A2123258CDB620056E9E6 /* TestResultExporterTests.swift */; };
 		F47980962565B84600185C37 /* ExportTestResult.swift in Sources */ = {isa = PBXBuildFile; fileRef = F47980952565B84600185C37 /* ExportTestResult.swift */; };
 		F4FF4B4D256BEF6800E69EA9 /* ScanTestResult.swift in Sources */ = {isa = PBXBuildFile; fileRef = F4FF4B4C256BEF6800E69EA9 /* ScanTestResult.swift */; };
 		F4FF4B50256BEF7800E69EA9 /* CodableExposureWindow.swift in Sources */ = {isa = PBXBuildFile; fileRef = F4FF4B4F256BEF7800E69EA9 /* CodableExposureWindow.swift */; };
 /* End PBXBuildFile section */
+
+/* Begin PBXContainerItemProxy section */
+		F44A2119258CDB410056E9E6 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = D2FD69A2247D445500BA7EA1 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = D2FD69A9247D445500BA7EA1;
+			remoteInfo = "En Validatie";
+		};
+/* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
 		D290F65C248147A8007ECE7C /* LICENSE */ = {isa = PBXFileReference; lastKnownFileType = folder; path = LICENSE; sourceTree = "<group>"; };
@@ -50,6 +62,11 @@
 		D2FD69CE247D46E800BA7EA1 /* LocalStore.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LocalStore.swift; sourceTree = "<group>"; };
 		D2FD69D0247D4ADF00BA7EA1 /* ScannerViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ScannerViewController.swift; sourceTree = "<group>"; };
 		D2FD69D3247D860800BA7EA1 /* SenderViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SenderViewController.swift; sourceTree = "<group>"; };
+		F44A210D258CDAD10056E9E6 /* TestResultExporter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TestResultExporter.swift; sourceTree = "<group>"; };
+		F44A2114258CDB410056E9E6 /* EN ValidatieTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "EN ValidatieTests.xctest"; sourceTree = BUILT_PRODUCTS_DIR; };
+		F44A2118258CDB410056E9E6 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		F44A2122258CDB620056E9E6 /* EN ValidatieTests-Bridging-Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "EN ValidatieTests-Bridging-Header.h"; sourceTree = "<group>"; };
+		F44A2123258CDB620056E9E6 /* TestResultExporterTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TestResultExporterTests.swift; sourceTree = "<group>"; };
 		F47980952565B84600185C37 /* ExportTestResult.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ExportTestResult.swift; sourceTree = "<group>"; };
 		F4FF4B4C256BEF6800E69EA9 /* ScanTestResult.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ScanTestResult.swift; sourceTree = "<group>"; };
 		F4FF4B4F256BEF7800E69EA9 /* CodableExposureWindow.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CodableExposureWindow.swift; sourceTree = "<group>"; };
@@ -65,6 +82,13 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
+		F44A2111258CDB410056E9E6 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
@@ -75,6 +99,7 @@
 				D290F65E24814900007ECE7C /* README.md */,
 				D290F65C248147A8007ECE7C /* LICENSE */,
 				D2FD69AC247D445500BA7EA1 /* En Validatie */,
+				F44A2115258CDB410056E9E6 /* EN ValidatieTests */,
 				D2FD69AB247D445500BA7EA1 /* Products */,
 			);
 			sourceTree = "<group>";
@@ -83,6 +108,7 @@
 			isa = PBXGroup;
 			children = (
 				D2FD69AA247D445500BA7EA1 /* EN Validatie.app */,
+				F44A2114258CDB410056E9E6 /* EN ValidatieTests.xctest */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -101,6 +127,7 @@
 				D2FD69B8247D445700BA7EA1 /* LaunchScreen.storyboard */,
 				D2FD69BB247D445700BA7EA1 /* Info.plist */,
 				D2B66A66248009690006755A /* Config.swift */,
+				F44A210D258CDAD10056E9E6 /* TestResultExporter.swift */,
 			);
 			path = "En Validatie";
 			sourceTree = "<group>";
@@ -128,6 +155,16 @@
 			path = VC;
 			sourceTree = "<group>";
 		};
+		F44A2115258CDB410056E9E6 /* EN ValidatieTests */ = {
+			isa = PBXGroup;
+			children = (
+				F44A2118258CDB410056E9E6 /* Info.plist */,
+				F44A2123258CDB620056E9E6 /* TestResultExporterTests.swift */,
+				F44A2122258CDB620056E9E6 /* EN ValidatieTests-Bridging-Header.h */,
+			);
+			path = "EN ValidatieTests";
+			sourceTree = "<group>";
+		};
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
@@ -152,18 +189,41 @@
 			productReference = D2FD69AA247D445500BA7EA1 /* EN Validatie.app */;
 			productType = "com.apple.product-type.application";
 		};
+		F44A2113258CDB410056E9E6 /* EN ValidatieTests */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = F44A211B258CDB420056E9E6 /* Build configuration list for PBXNativeTarget "EN ValidatieTests" */;
+			buildPhases = (
+				F44A2110258CDB410056E9E6 /* Sources */,
+				F44A2111258CDB410056E9E6 /* Frameworks */,
+				F44A2112258CDB410056E9E6 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				F44A211A258CDB410056E9E6 /* PBXTargetDependency */,
+			);
+			name = "EN ValidatieTests";
+			productName = "EN ValidatieTests";
+			productReference = F44A2114258CDB410056E9E6 /* EN ValidatieTests.xctest */;
+			productType = "com.apple.product-type.bundle.unit-test";
+		};
 /* End PBXNativeTarget section */
 
 /* Begin PBXProject section */
 		D2FD69A2247D445500BA7EA1 /* Project object */ = {
 			isa = PBXProject;
 			attributes = {
-				LastSwiftUpdateCheck = 1150;
+				LastSwiftUpdateCheck = 1230;
 				LastUpgradeCheck = 1210;
 				ORGANIZATIONNAME = Rijksoverheid;
 				TargetAttributes = {
 					D2FD69A9247D445500BA7EA1 = {
 						CreatedOnToolsVersion = 11.5;
+					};
+					F44A2113258CDB410056E9E6 = {
+						CreatedOnToolsVersion = 12.3;
+						LastSwiftMigration = 1230;
+						TestTargetID = D2FD69A9247D445500BA7EA1;
 					};
 				};
 			};
@@ -184,6 +244,7 @@
 			projectRoot = "";
 			targets = (
 				D2FD69A9247D445500BA7EA1 /* En Validatie */,
+				F44A2113258CDB410056E9E6 /* EN ValidatieTests */,
 			);
 		};
 /* End PBXProject section */
@@ -199,6 +260,13 @@
 				D2FD69B5247D445500BA7EA1 /* Main.storyboard in Resources */,
 				D290F66124814BC2007ECE7C /* lab-test.jpg in Resources */,
 				D290F65D248147A8007ECE7C /* LICENSE in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		F44A2112258CDB410056E9E6 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -218,6 +286,7 @@
 				D2FD69C3247D450E00BA7EA1 /* ExposureManager.swift in Sources */,
 				D2FD69B0247D445500BA7EA1 /* SceneDelegate.swift in Sources */,
 				D2FD69CD247D461C00BA7EA1 /* Server.swift in Sources */,
+				F44A210E258CDAD10056E9E6 /* TestResultExporter.swift in Sources */,
 				D2B66A67248009690006755A /* Config.swift in Sources */,
 				D2FD69C5247D454A00BA7EA1 /* ExposureKeyData.pb.swift in Sources */,
 				D2FD69D1247D4ADF00BA7EA1 /* ScannerViewController.swift in Sources */,
@@ -225,7 +294,23 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
+		F44A2110258CDB410056E9E6 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				F44A2124258CDB620056E9E6 /* TestResultExporterTests.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 /* End PBXSourcesBuildPhase section */
+
+/* Begin PBXTargetDependency section */
+		F44A211A258CDB410056E9E6 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = D2FD69A9247D445500BA7EA1 /* En Validatie */;
+			targetProxy = F44A2119258CDB410056E9E6 /* PBXContainerItemProxy */;
+		};
+/* End PBXTargetDependency section */
 
 /* Begin PBXVariantGroup section */
 		D2FD69B3247D445500BA7EA1 /* Main.storyboard */ = {
@@ -409,6 +494,51 @@
 			};
 			name = Release;
 		};
+		F44A211C258CDB420056E9E6 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				CLANG_ENABLE_MODULES = YES;
+				CODE_SIGN_STYLE = Automatic;
+				INFOPLIST_FILE = "EN ValidatieTests/Info.plist";
+				IPHONEOS_DEPLOYMENT_TARGET = 14.3;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@loader_path/Frameworks",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = "nl.rijksoverheid.EN-ValidatieTests";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_OBJC_BRIDGING_HEADER = "EN ValidatieTests/EN ValidatieTests-Bridging-Header.h";
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/EN Validatie.app/EN Validatie";
+			};
+			name = Debug;
+		};
+		F44A211D258CDB420056E9E6 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				CLANG_ENABLE_MODULES = YES;
+				CODE_SIGN_STYLE = Automatic;
+				INFOPLIST_FILE = "EN ValidatieTests/Info.plist";
+				IPHONEOS_DEPLOYMENT_TARGET = 14.3;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@loader_path/Frameworks",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = "nl.rijksoverheid.EN-ValidatieTests";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_OBJC_BRIDGING_HEADER = "EN ValidatieTests/EN ValidatieTests-Bridging-Header.h";
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/EN Validatie.app/EN Validatie";
+			};
+			name = Release;
+		};
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
@@ -426,6 +556,15 @@
 			buildConfigurations = (
 				D2FD69BF247D445700BA7EA1 /* Debug */,
 				D2FD69C0247D445700BA7EA1 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		F44A211B258CDB420056E9E6 /* Build configuration list for PBXNativeTarget "EN ValidatieTests" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				F44A211C258CDB420056E9E6 /* Debug */,
+				F44A211D258CDB420056E9E6 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;

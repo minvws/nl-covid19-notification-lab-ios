@@ -1,15 +1,15 @@
-//
-//  CodableExposureWindow.swift
-//  En Validatie
-//
-//  Created by Roel Spruit on 23/11/2020.
-//  Copyright © 2020 Rijksoverheid. All rights reserved.
-//
+/*
+ * Copyright (c) 2020 De Staat der Nederlanden, Ministerie van Volksgezondheid, Welzijn en Sport.
+ *  Licensed under the EUROPEAN UNION PUBLIC LICENCE v. 1.2
+ *
+ *  SPDX-License-Identifier: EUPL-1.2
+ */
 
 import Foundation
 import ExposureNotification
 
 struct CodableExposureWindow: Codable {
+    
     let date: Date
     let scanInstances: [CodableScanInstance]
     let calibrationConfidence: UInt8
@@ -28,5 +28,11 @@ struct CodableExposureWindow: Codable {
                                 typicalAttenuation: Int(scanInstance.typicalAttenuation),
                                 secondsSinceLastScan: scanInstance.secondsSinceLastScan)
         })
+    }
+    
+    init(date: Date, scanInstances: [CodableExposureWindow.CodableScanInstance], calibrationConfidence: UInt8) {
+        self.date = date
+        self.scanInstances = scanInstances
+        self.calibrationConfidence = calibrationConfidence
     }
 }

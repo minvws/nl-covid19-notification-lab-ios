@@ -15,6 +15,8 @@ class ReceiverViewController: UIViewController, ScannerViewControllerDelegate {
     @IBOutlet weak var shareButton: UIBarButtonItem!
     @IBOutlet weak var deleteButton: UIBarButtonItem!
     
+    private let testResultExporter = TestResultExporter()
+    
     @Persisted(userDefaultsKey: "testResults", notificationName: .init("TestResultsDidChange"), defaultValue: [])
     var testResults: [ScanTestResult]
     
@@ -48,7 +50,8 @@ class ReceiverViewController: UIViewController, ScannerViewControllerDelegate {
     
     @IBAction func shareClick(_ sender: Any) {
         
-        let exportedTestResults = testResults.flatMap { self.generateExportTestResults(from: $0) }
+        var exportedTestResults = testResults.flatMap { testResultExporter.generateExportTestResults(from: $0) }
+        exportedTestResults = testResultExporter.deduplicate(testResults: exportedTestResults)
         
         var lines = ["Id,Test,Scanning Device,Scanned device,Scanned TEK,Timestamp,Exposure window id,Exposure window timestamp,Calibration confidence,Scan instance id,Min attenuation,Typical attenuation,Seconds since last scan"]
         
@@ -123,75 +126,7 @@ class ReceiverViewController: UIViewController, ScannerViewControllerDelegate {
         }
     }
     
-    private func generateExportTestResults(from testResult: ScanTestResult) -> [ExportTestResult] {
-        
-        var newTestResults = [ExportTestResult]()
-        
-        let resultGenerationTimeStamp = Date().timeIntervalSince1970
-        
-        if testResult.exposureWindows.isEmpty {
-            newTestResults.append(ExportTestResult(
-                id: testResult.id,
-                test: testResult.testId,
-                scanningDevice: UIDevice.current.name,
-                scannedDevice: testResult.scannedDeviceId,
-                scannedTEK: testResult.scannedTek,
-                timestamp: testResult.timestamp,
-                exposureWindowID: nil,
-                exposureWindowTimestamp: nil,
-                calibrationConfidence: nil,
-                scanInstanceId: nil,
-                minAttenuation: nil,
-                typicalAttenuation: nil,
-                secondsSinceLastScan: nil
-            ))
-        }
-        
-        testResult.exposureWindows.forEach { (window) in
-            
-            let windowID = UUID()
-            
-            if window.scanInstances.isEmpty {
-                newTestResults.append(ExportTestResult(
-                    id: testResult.id,
-                    test: testResult.testId,
-                    scanningDevice: testResult.scanningDeviceId,
-                    scannedDevice: testResult.scannedDeviceId,
-                    scannedTEK: testResult.scannedTek,
-                    timestamp: resultGenerationTimeStamp,
-                    exposureWindowID: windowID.uuidString,
-                    exposureWindowTimestamp: window.date.timeIntervalSince1970,
-                    calibrationConfidence: Int(window.calibrationConfidence),
-                    scanInstanceId: nil,
-                    minAttenuation: nil,
-                    typicalAttenuation: nil,
-                    secondsSinceLastScan: nil
-                ))
-            }
-            
-            
-            window.scanInstances.forEach { (scan) in
-                
-                newTestResults.append(ExportTestResult(
-                    id: testResult.id,
-                    test: testResult.testId,
-                    scanningDevice: testResult.scanningDeviceId,
-                    scannedDevice: testResult.scannedDeviceId,
-                    scannedTEK: testResult.scannedTek,
-                    timestamp: resultGenerationTimeStamp,
-                    exposureWindowID: windowID.uuidString,
-                    exposureWindowTimestamp: window.date.timeIntervalSince1970,
-                    calibrationConfidence: Int(window.calibrationConfidence),
-                    scanInstanceId: UUID().uuidString,
-                    minAttenuation: scan.minimumAttenuation,
-                    typicalAttenuation: scan.typicalAttenuation,
-                    secondsSinceLastScan: scan.secondsSinceLastScan
-                ))
-            }
-        }
-        
-        return newTestResults
-    }
+    
     
     private func showDialog(title: String = "Info", message:String) {
         DispatchQueue.main.async {
