@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="17506" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES" initialViewController="7Og-Ls-iYk">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="17701" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES" initialViewController="7Og-Ls-iYk">
     <device id="retina6_1" orientation="portrait" appearance="light"/>
     <dependencies>
         <deployment identifier="iOS"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="17505"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="17703"/>
         <capability name="Named colors" minToolsVersion="9.0"/>
         <capability name="Safe area layout guides" minToolsVersion="9.0"/>
         <capability name="System colors in document resources" minToolsVersion="11.0"/>
@@ -110,8 +110,11 @@
                         <rect key="frame" x="0.0" y="0.0" width="414" height="896"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
-                            <imageView clipsSubviews="YES" userInteractionEnabled="NO" tag="1" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="z36-PL-Io0">
-                                <rect key="frame" x="20" y="260.5" width="374" height="412"/>
+                            <imageView clipsSubviews="YES" userInteractionEnabled="NO" tag="1" contentMode="scaleAspectFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="z36-PL-Io0">
+                                <rect key="frame" x="20" y="298.5" width="374" height="374"/>
+                                <constraints>
+                                    <constraint firstAttribute="width" secondItem="z36-PL-Io0" secondAttribute="height" multiplier="1:1" id="pmF-SK-U0q"/>
+                                </constraints>
                             </imageView>
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="zVT-5g-74Q">
                                 <rect key="frame" x="20" y="723" width="374" height="50"/>
@@ -230,7 +233,7 @@
                             <constraint firstItem="vIl-XJ-1iI" firstAttribute="bottom" secondItem="zVT-5g-74Q" secondAttribute="bottom" constant="40" id="fdL-tr-cah"/>
                             <constraint firstItem="vIl-XJ-1iI" firstAttribute="trailing" secondItem="SJG-gU-pYT" secondAttribute="trailing" constant="20" id="gVs-IN-twD"/>
                             <constraint firstItem="3LR-w2-ghT" firstAttribute="top" secondItem="z36-PL-Io0" secondAttribute="bottom" constant="10" id="ha4-Ph-tav"/>
-                            <constraint firstItem="z36-PL-Io0" firstAttribute="top" secondItem="SJG-gU-pYT" secondAttribute="bottom" constant="20" id="k1T-fA-wbt"/>
+                            <constraint firstItem="z36-PL-Io0" firstAttribute="top" relation="greaterThanOrEqual" secondItem="SJG-gU-pYT" secondAttribute="bottom" constant="20" id="k1T-fA-wbt"/>
                             <constraint firstItem="5sx-LE-AjQ" firstAttribute="top" secondItem="vIl-XJ-1iI" secondAttribute="top" constant="20" id="kdx-PW-FbT"/>
                             <constraint firstItem="vIl-XJ-1iI" firstAttribute="trailing" secondItem="z36-PL-Io0" secondAttribute="trailing" constant="20" id="qct-6n-3QX"/>
                             <constraint firstItem="z36-PL-Io0" firstAttribute="leading" secondItem="vIl-XJ-1iI" secondAttribute="leading" constant="20" id="tqT-QR-Q9G"/>
