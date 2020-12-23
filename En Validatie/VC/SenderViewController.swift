@@ -67,7 +67,7 @@ class SenderViewController: UIViewController, UITextFieldDelegate {
                 )
                 
                 let jsonData = try! JSONEncoder().encode(key)
-                let jsonString = String(data: jsonData, encoding: .utf8)
+                let jsonString = String(data: jsonData, encoding: .isoLatin1)
                 self.generateQrCode(code: jsonString!)
                 self.labelTEK.text = firstKey.keyData.base64EncodedString()
                 
@@ -112,7 +112,11 @@ class SenderViewController: UIViewController, UITextFieldDelegate {
             return
         }
         
-        let data = code.data(using: String.Encoding.isoLatin1)
+        guard let data = code.data(using: .isoLatin1) else {
+            showDialog(title: "Error", message: "QR Code cannot be created due to an internal error (unable to create data from string \(code))")
+            return
+        }
+        
         filter.setValue(data, forKey: "inputMessage")
                 
         let transform = CGAffineTransform(scaleX: 10, y: 10)
@@ -126,5 +130,4 @@ class SenderViewController: UIViewController, UITextFieldDelegate {
                 
         imageViewQr.image = UIImage(ciImage: scaledImage)
     }
-    
 }
