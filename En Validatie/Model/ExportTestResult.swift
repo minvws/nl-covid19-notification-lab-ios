@@ -23,3 +23,17 @@ struct ExportTestResult: Codable {
     let typicalAttenuation: Int?
     let secondsSinceLastScan: Int?
 }
+
+extension Collection where Element == ExportTestResult {
+    var minAttenuation: Int {
+        !self.isEmpty ? self.reduce(Int.max, { Swift.min($0, $1.minAttenuation ?? 0) }) : 0
+    }
+    
+    var averageAttenuation: Int {
+        self.map({ $0.typicalAttenuation ?? 0 }).average()
+    }
+    
+    var duration: Int {
+        self.reduce(0, { $0 + ($1.secondsSinceLastScan ?? 0) })
+    }
+}
