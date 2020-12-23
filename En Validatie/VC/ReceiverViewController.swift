@@ -18,19 +18,20 @@ class ReceiverViewController: UIViewController, ScannerViewControllerDelegate {
     private let testResultExporter = TestResultExporter()
     
     @Persisted(userDefaultsKey: "testResults", notificationName: .init("TestResultsDidChange"), defaultValue: [])
-    private var testResults: [ScanTestResult] {
-        didSet {
-            var convertedTestResults = testResults.flatMap { testResultExporter.generateExportTestResults(from: $0) }
-            convertedTestResults = testResultExporter.deduplicate(testResults: convertedTestResults)
-            sanitizedTestResults = convertedTestResults
-        }
-    }
-    
-    @Persisted(userDefaultsKey: "scanIds", notificationName: .init("TestResultsDidChange"), defaultValue: [])
-    private var scanIds: [UUID]
-    
+    private var testResults: [ScanTestResult]
+        
     /// Contains deduplicated test results. Sorted old to new
-    private var sanitizedTestResults = [ExportTestResult]()
+    private var sanitizedTestResults: [ExportTestResult] {
+        
+        // order is reversed because deduplication assumes the first scan in the list should remain
+        // and the following (identical) scans are duplicates.
+        
+        let convertedTestResults = testResults
+            .reversed()
+            .flatMap { testResultExporter.generateExportTestResults(from: $0) }
+        
+        return testResultExporter.deduplicate(testResults: convertedTestResults)
+    }
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -54,8 +55,6 @@ class ReceiverViewController: UIViewController, ScannerViewControllerDelegate {
         alert.addAction(UIAlertAction(title: "Cancel", style: .cancel, handler: nil))
         alert.addAction(UIAlertAction(title: "Delete", style: .destructive, handler: { _ in
             self.testResults = []
-            self.sanitizedTestResults = []
-            self.scanIds = []
             Server.shared.clearData()
             self.updateUI()
         }))
@@ -64,7 +63,7 @@ class ReceiverViewController: UIViewController, ScannerViewControllerDelegate {
     
     @IBAction func shareClick(_ sender: Any) {
         
-        guard let csvFileURL = testResultExporter.generateCSV(testResults: sanitizedTestResults) else {
+        guard let csvFileURL = testResultExporter.generateCSV(scanResults: testResults, sanitizedTestResults: sanitizedTestResults) else {
             showDialog(title: "Error", message: "Unable to create testresult exportfile")
             return
         }
@@ -76,8 +75,8 @@ class ReceiverViewController: UIViewController, ScannerViewControllerDelegate {
     
     private func updateUI() {
         tableView.reloadData()
-        shareButton.isEnabled = !scanIds.isEmpty
-        deleteButton.isEnabled = !scanIds.isEmpty
+        shareButton.isEnabled = !testResults.isEmpty
+        deleteButton.isEnabled = !testResults.isEmpty
     }
     
     /// Called when `ScannerViewController` has successfully scanned a TEK QR code. The scanned diagnosiskey will be stored in Server.shared.diagnosisKey at this point.
@@ -99,11 +98,8 @@ class ReceiverViewController: UIViewController, ScannerViewControllerDelegate {
                 
                 let allExposureWindows = exposureWindows.map(CodableExposureWindow.init)
                           
-                let scanID = UUID()
-                self.scanIds.insert(scanID, at: 0)
-                
                 let scanTestResult = ScanTestResult(
-                    id: scanID.uuidString,
+                    id: UUID().uuidString,
                     scannedTek: scannedKey.keyData.base64EncodedString(),
                     scanningDeviceId: UIDevice.current.name,
                     scannedDeviceId: scannedKey.deviceId,
@@ -113,7 +109,7 @@ class ReceiverViewController: UIViewController, ScannerViewControllerDelegate {
                 )
                 
                 self.testResults.append(scanTestResult)
-                self.testResults = self.testResults.sortedOldToNew
+                self.testResults = self.testResults.sortedNewToOld
                 
                 self.updateUI()
             }
@@ -142,9 +138,7 @@ extension ReceiverViewController: UITableViewDelegate {
     
     func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCell.EditingStyle, forRowAt indexPath: IndexPath) {
         if editingStyle == .delete {
-            let scanID = scanIds[indexPath.row]
-            testResults = testResults.filter({ $0.id != scanID.uuidString })
-            scanIds.remove(at: indexPath.row)
+            testResults.remove(at: indexPath.row)
             tableView.reloadData()
         }
     }
@@ -152,14 +146,14 @@ extension ReceiverViewController: UITableViewDelegate {
 
 extension ReceiverViewController: UITableViewDataSource {
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return scanIds.count
+        return testResults.count
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        let scanID = scanIds[indexPath.row]
+        let testResult = testResults[indexPath.row]
         
         let resultsForScan = sanitizedTestResults.filter { (tr) -> Bool in
-            tr.id == scanID.uuidString
+            tr.id == testResult.id
         }.reversed()
         
         guard let cell = tableView.dequeueReusableCell(withIdentifier: "Cell") else {
@@ -168,37 +162,21 @@ extension ReceiverViewController: UITableViewDataSource {
         
         var cellContent = [String]()
         
-        if let firstResult = resultsForScan.first {
-            cellContent.append("<style>body{font-size:16px;}</style>")
-            cellContent.append("<b>Test:</b> \(firstResult.test)<br />")
-            cellContent.append("<b>Scanning Device:</b> \(firstResult.scanningDevice)<br />")
-            cellContent.append("<b>Scanned Device:</b> \(firstResult.scannedDevice)<br />")
-            cellContent.append("<b>QR Scanned:</b> \(Date(timeIntervalSince1970: firstResult.timestamp))<br />")
-            cellContent.append("<b>TEK:</b> \(firstResult.scannedTEK)<br />")
-            
+        cellContent.append("<style>body{font-size:16px;}</style>")
+        cellContent.append("<b>Test:</b> \(testResult.testId)<br />")
+        cellContent.append("<b>Scanning Device:</b> \(testResult.scanningDeviceId)<br />")
+        cellContent.append("<b>Scanned Device:</b> \(testResult.scannedDeviceId)<br />")
+        cellContent.append("<b>QR Scanned:</b> \(Date(timeIntervalSince1970: testResult.timestamp))<br />")
+        cellContent.append("<b>TEK:</b> \(testResult.scannedTek)<br />")
+        
+        if !resultsForScan.isEmpty {
             cellContent.append("<b>Attenuation:</b> min:\(resultsForScan.minAttenuation) Db, typical:\(resultsForScan.averageAttenuation) Db<br />")
             cellContent.append("<b>Duration:</b>\(resultsForScan.duration) s<br />")
             cellContent.append("<b>Scans:</b>\(resultsForScan.count)")
-            
         } else {
             cellContent.append("<b>Scans: </b>No scaninstances found")
         }
-                
-//        cellContent.append("<style>body{font-size:16px;}</style>")
-//        cellContent.append("<b>Test:</b> \(testResult.testId)<br />")
-//        cellContent.append("<b>Scanning Device:</b> \(testResult.scanningDeviceId)<br />")
-//        cellContent.append("<b>Scanned Device:</b> \(testResult.scannedDeviceId)<br />")
-//        cellContent.append("<b>QR Scanned:</b> \(Date(timeIntervalSince1970: testResult.timestamp))<br />")
-//        cellContent.append("<b>TEK:</b> \(testResult.scannedTek)<br />")
-//
-//        if testResult.allScanInstances.isEmpty {
-//            cellContent.append("<b>Scans: </b>No scaninstances found")
-//        } else {
-//            cellContent.append("<b>Attenuation:</b> min:\(testResult.minAttenuation) Db, typical:\(testResult.averageAttenuation) Db<br />")
-//            cellContent.append("<b>Duration:</b>\(testResult.duration) s<br />")
-//            cellContent.append("<b>Scans:</b>\(testResult.allScanInstances.count)")
-//        }
-        
+                        
         let data = cellContent.joined().data(using: String.Encoding.utf16, allowLossyConversion: false)!
         
         cell.textLabel?.attributedText = try! NSAttributedString(

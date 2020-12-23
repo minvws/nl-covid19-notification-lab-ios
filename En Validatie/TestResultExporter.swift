@@ -107,20 +107,31 @@ class TestResultExporter {
         return deduplicatedResults
     }
     
-    func generateCSV(testResults: [ExportTestResult]) -> URL? {
+    func generateCSV(scanResults: [ScanTestResult], sanitizedTestResults: [ExportTestResult]) -> URL? {
         var lines = ["Id,Test,Scanning Device,Scanned device,Scanned TEK,Timestamp,Exposure window id,Exposure window timestamp,Calibration confidence,Scan instance id,Min attenuation,Typical attenuation,Seconds since last scan"]
         
-        testResults.forEach { (result) in
-            let scanInstanceId = result.scanInstanceId != nil ? "\(result.scanInstanceId ?? "")" : ""
-            let minAttenuation = result.minAttenuation != nil ? "\(result.minAttenuation ?? 0)" : ""
-            let typicalAttenuation = result.typicalAttenuation != nil ? "\(result.typicalAttenuation ?? 0)" : ""
-            let secondsSinceLastScan = result.secondsSinceLastScan != nil ? "\(result.secondsSinceLastScan ?? 0)" : ""
-            let exposureWindowID = result.exposureWindowID != nil ? "\(result.exposureWindowID ?? "")" : ""
-            let exposureWindowTimestamp = result.exposureWindowTimestamp != nil ? "\(result.exposureWindowTimestamp ?? 0)" : ""
-            let calibrationConfidence = result.calibrationConfidence != nil ? "\(result.calibrationConfidence ?? 0)" : ""
+        scanResults.sortedNewToOld.forEach { (scanResult) in
+            let resultsForScan = sanitizedTestResults.filter { (tr) -> Bool in
+                tr.id == scanResult.id
+            }.reversed()
             
-            lines.append("\(result.id),\(result.test),\(result.scanningDevice),\(result.scannedDevice),\(result.scannedTEK),\(result.timestamp),\(exposureWindowID),\(exposureWindowTimestamp),\(calibrationConfidence),\(scanInstanceId),\(minAttenuation),\(typicalAttenuation),\(secondsSinceLastScan)")
+            if resultsForScan.isEmpty {
+                lines.append("\(scanResult.id),\(scanResult.testId),\(scanResult.scanningDeviceId),\(scanResult.scannedDeviceId),\(scanResult.scannedTek),\(scanResult.timestamp),,0,0,,0,0,0")
+            }
+            
+            resultsForScan.forEach { (result) in
+                let scanInstanceId = result.scanInstanceId != nil ? "\(result.scanInstanceId ?? "")" : ""
+                let minAttenuation = result.minAttenuation != nil ? "\(result.minAttenuation ?? 0)" : ""
+                let typicalAttenuation = result.typicalAttenuation != nil ? "\(result.typicalAttenuation ?? 0)" : ""
+                let secondsSinceLastScan = result.secondsSinceLastScan != nil ? "\(result.secondsSinceLastScan ?? 0)" : ""
+                let exposureWindowID = result.exposureWindowID != nil ? "\(result.exposureWindowID ?? "")" : ""
+                let exposureWindowTimestamp = result.exposureWindowTimestamp != nil ? "\(result.exposureWindowTimestamp ?? 0)" : ""
+                let calibrationConfidence = result.calibrationConfidence != nil ? "\(result.calibrationConfidence ?? 0)" : ""
+                
+                lines.append("\(result.id),\(result.test),\(result.scanningDevice),\(result.scannedDevice),\(result.scannedTEK),\(result.timestamp),\(exposureWindowID),\(exposureWindowTimestamp),\(calibrationConfidence),\(scanInstanceId),\(minAttenuation),\(typicalAttenuation),\(secondsSinceLastScan)")
+            }
         }
+                
         
         let fileManager = FileManager.default
         do {
