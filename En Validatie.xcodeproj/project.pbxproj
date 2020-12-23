@@ -25,9 +25,6 @@
 		D2FD69CF247D46E800BA7EA1 /* LocalStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = D2FD69CE247D46E800BA7EA1 /* LocalStore.swift */; };
 		D2FD69D1247D4ADF00BA7EA1 /* ScannerViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = D2FD69D0247D4ADF00BA7EA1 /* ScannerViewController.swift */; };
 		D2FD69D4247D860800BA7EA1 /* SenderViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = D2FD69D3247D860800BA7EA1 /* SenderViewController.swift */; };
-		F4420CB52591D9D900A9B759 /* QRCodeGenerator.m in Sources */ = {isa = PBXBuildFile; fileRef = F4420CB12591D9D900A9B759 /* QRCodeGenerator.m */; };
-		F4420CB62591D9D900A9B759 /* CIColor+QRCode.m in Sources */ = {isa = PBXBuildFile; fileRef = F4420CB22591D9D900A9B759 /* CIColor+QRCode.m */; };
-		F4420CB72591D9D900A9B759 /* NSString+Utils.m in Sources */ = {isa = PBXBuildFile; fileRef = F4420CB32591D9D900A9B759 /* NSString+Utils.m */; };
 		F44A210E258CDAD10056E9E6 /* TestResultExporter.swift in Sources */ = {isa = PBXBuildFile; fileRef = F44A210D258CDAD10056E9E6 /* TestResultExporter.swift */; };
 		F44A2124258CDB620056E9E6 /* TestResultExporterTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = F44A2123258CDB620056E9E6 /* TestResultExporterTests.swift */; };
 		F47980962565B84600185C37 /* ExportTestResult.swift in Sources */ = {isa = PBXBuildFile; fileRef = F47980952565B84600185C37 /* ExportTestResult.swift */; };
@@ -65,13 +62,6 @@
 		D2FD69CE247D46E800BA7EA1 /* LocalStore.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LocalStore.swift; sourceTree = "<group>"; };
 		D2FD69D0247D4ADF00BA7EA1 /* ScannerViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ScannerViewController.swift; sourceTree = "<group>"; };
 		D2FD69D3247D860800BA7EA1 /* SenderViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SenderViewController.swift; sourceTree = "<group>"; };
-		F4420CAF2591D9D900A9B759 /* NSString+Utils.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSString+Utils.h"; sourceTree = "<group>"; };
-		F4420CB02591D9D900A9B759 /* CIColor+QRCode.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "CIColor+QRCode.h"; sourceTree = "<group>"; };
-		F4420CB12591D9D900A9B759 /* QRCodeGenerator.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = QRCodeGenerator.m; sourceTree = "<group>"; };
-		F4420CB22591D9D900A9B759 /* CIColor+QRCode.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "CIColor+QRCode.m"; sourceTree = "<group>"; };
-		F4420CB32591D9D900A9B759 /* NSString+Utils.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSString+Utils.m"; sourceTree = "<group>"; };
-		F4420CB42591D9D900A9B759 /* QRCodeGenerator.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = QRCodeGenerator.h; sourceTree = "<group>"; };
-		F4420CBA2591DA7200A9B759 /* ENValidatie-Bridging-Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "ENValidatie-Bridging-Header.h"; sourceTree = "<group>"; };
 		F44A210D258CDAD10056E9E6 /* TestResultExporter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TestResultExporter.swift; sourceTree = "<group>"; };
 		F44A2114258CDB410056E9E6 /* EN ValidatieTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "EN ValidatieTests.xctest"; sourceTree = BUILT_PRODUCTS_DIR; };
 		F44A2118258CDB410056E9E6 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
@@ -126,7 +116,6 @@
 		D2FD69AC247D445500BA7EA1 /* En Validatie */ = {
 			isa = PBXGroup;
 			children = (
-				F4420CAE2591D9D900A9B759 /* QRCodeGenerator */,
 				D2FD69D2247D85EF00BA7EA1 /* VC */,
 				D2FD69CB247D460F00BA7EA1 /* Model */,
 				D2FD69C4247D454A00BA7EA1 /* ExposureKeyData.pb.swift */,
@@ -139,7 +128,6 @@
 				D2FD69BB247D445700BA7EA1 /* Info.plist */,
 				D2B66A66248009690006755A /* Config.swift */,
 				F44A210D258CDAD10056E9E6 /* TestResultExporter.swift */,
-				F4420CBA2591DA7200A9B759 /* ENValidatie-Bridging-Header.h */,
 			);
 			path = "En Validatie";
 			sourceTree = "<group>";
@@ -165,19 +153,6 @@
 				D2FD69D3247D860800BA7EA1 /* SenderViewController.swift */,
 			);
 			path = VC;
-			sourceTree = "<group>";
-		};
-		F4420CAE2591D9D900A9B759 /* QRCodeGenerator */ = {
-			isa = PBXGroup;
-			children = (
-				F4420CAF2591D9D900A9B759 /* NSString+Utils.h */,
-				F4420CB02591D9D900A9B759 /* CIColor+QRCode.h */,
-				F4420CB12591D9D900A9B759 /* QRCodeGenerator.m */,
-				F4420CB22591D9D900A9B759 /* CIColor+QRCode.m */,
-				F4420CB32591D9D900A9B759 /* NSString+Utils.m */,
-				F4420CB42591D9D900A9B759 /* QRCodeGenerator.h */,
-			);
-			path = QRCodeGenerator;
 			sourceTree = "<group>";
 		};
 		F44A2115258CDB410056E9E6 /* EN ValidatieTests */ = {
@@ -306,9 +281,7 @@
 				D2FD69D4247D860800BA7EA1 /* SenderViewController.swift in Sources */,
 				D2FD69B2247D445500BA7EA1 /* ReceiverViewController.swift in Sources */,
 				D2FD69CF247D46E800BA7EA1 /* LocalStore.swift in Sources */,
-				F4420CB72591D9D900A9B759 /* NSString+Utils.m in Sources */,
 				D2FD69AE247D445500BA7EA1 /* AppDelegate.swift in Sources */,
-				F4420CB52591D9D900A9B759 /* QRCodeGenerator.m in Sources */,
 				F47980962565B84600185C37 /* ExportTestResult.swift in Sources */,
 				D2FD69C3247D450E00BA7EA1 /* ExposureManager.swift in Sources */,
 				D2FD69B0247D445500BA7EA1 /* SceneDelegate.swift in Sources */,
@@ -318,7 +291,6 @@
 				D2FD69C5247D454A00BA7EA1 /* ExposureKeyData.pb.swift in Sources */,
 				D2FD69D1247D4ADF00BA7EA1 /* ScannerViewController.swift in Sources */,
 				F4FF4B4D256BEF6800E69EA9 /* ScanTestResult.swift in Sources */,
-				F4420CB62591D9D900A9B759 /* CIColor+QRCode.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -483,7 +455,7 @@
 				CODE_SIGN_ENTITLEMENTS = "En Validatie/En Demo.entitlements";
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				CODE_SIGN_STYLE = Manual;
-				CURRENT_PROJECT_VERSION = 7;
+				CURRENT_PROJECT_VERSION = 9;
 				DEVELOPMENT_TEAM = C2H38GV99H;
 				INFOPLIST_FILE = "En Validatie/Info.plist";
 				LD_RUNPATH_SEARCH_PATHS = (
@@ -494,7 +466,6 @@
 				PRODUCT_BUNDLE_IDENTIFIER = nl.rijksoverheid.en.lab;
 				PRODUCT_NAME = "EN Validatie";
 				PROVISIONING_PROFILE_SPECIFIER = "EN Validatie dev";
-				SWIFT_OBJC_BRIDGING_HEADER = "$(SRCROOT)/EN Validatie/ENValidatie-Bridging-Header.h";
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = 1;
 			};
@@ -507,7 +478,7 @@
 				CODE_SIGN_ENTITLEMENTS = "En Validatie/En Demo.entitlements";
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				CODE_SIGN_STYLE = Manual;
-				CURRENT_PROJECT_VERSION = 7;
+				CURRENT_PROJECT_VERSION = 9;
 				DEVELOPMENT_TEAM = C2H38GV99H;
 				INFOPLIST_FILE = "En Validatie/Info.plist";
 				LD_RUNPATH_SEARCH_PATHS = (
@@ -518,7 +489,6 @@
 				PRODUCT_BUNDLE_IDENTIFIER = nl.rijksoverheid.en.lab;
 				PRODUCT_NAME = "EN Validatie";
 				PROVISIONING_PROFILE_SPECIFIER = "EN Validatie dev";
-				SWIFT_OBJC_BRIDGING_HEADER = "$(SRCROOT)/EN Validatie/ENValidatie-Bridging-Header.h";
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = 1;
 			};

@@ -107,11 +107,24 @@ class SenderViewController: UIViewController, UITextFieldDelegate {
     
     private func generateQrCode(code: String) {
         
-        guard let qrCodeImage = QRCodeGenerator(string: code)?.getImage() else {
+        guard let filter = CIFilter(name: "CIQRCodeGenerator") else {
+            showDialog(title: "Error", message: "QR Code cannot be created due to an internal error (filter does not exist)")
             return
         }
         
-        imageViewQr.image = qrCodeImage
+        let data = code.data(using: String.Encoding.isoLatin1)
+        filter.setValue(data, forKey: "inputMessage")
+                
+        let transform = CGAffineTransform(scaleX: 10, y: 10)
+        
+        guard let outputImage = filter.outputImage else {
+            showDialog(title: "Error", message: "QR Code cannot be created due to an internal error (no output image)")
+            return
+        }
+            
+        let scaledImage = outputImage.transformed(by: transform)
+                
+        imageViewQr.image = UIImage(ciImage: scaledImage)
     }
     
 }
