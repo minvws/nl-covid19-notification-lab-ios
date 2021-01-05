@@ -17,7 +17,11 @@
 	<key>CFBundleShortVersionString</key>
 	<string>$(MARKETING_VERSION)</string>
 	<key>CFBundleVersion</key>
-	<string>1</string>
+	<string>$(CURRENT_PROJECT_VERSION)</string>
+	<key>ENAPIVersion</key>
+	<integer>2</integer>
+	<key>ENDeveloperRegion</key>
+	<string>NL</string>
 	<key>LSRequiresIPhoneOS</key>
 	<true/>
 	<key>NSBluetoothAlwaysUsageDescription</key>
@@ -62,8 +66,6 @@
 		<string>UIInterfaceOrientationLandscapeLeft</string>
 		<string>UIInterfaceOrientationLandscapeRight</string>
 	</array>
-	<key>APPCENTER_API_KEY</key>
-	<string>$(APPCENTER_API_KEY)</string>
 	<key>UIUserInterfaceStyle</key>
 	<string>Light</string>
 </dict>

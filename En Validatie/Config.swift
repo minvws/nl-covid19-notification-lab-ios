@@ -9,17 +9,10 @@ import UIKit
 import Foundation
 
 public enum Config {
-  private static let infoDictionary: [String: Any] = {
+  static let infoDictionary: [String: Any] = {
     guard let dict = Bundle.main.infoDictionary else {
       fatalError("File not found")
     }
     return dict
-  }()
-
-  static let appCenterApiKey: String = {
-    guard let apiKey = Config.infoDictionary["APPCENTER_API_KEY"] as? String else {
-      fatalError("Not set")
-    }
-    return apiKey
   }()
 }

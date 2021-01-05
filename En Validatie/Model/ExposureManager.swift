@@ -25,53 +25,48 @@ class ExposureManager {
         manager.invalidate()
     }
     
-    func detectExposures(completion: @escaping (Result<[ENExposureInfo]?, Error>) -> Void) {
+    func getExposureWindows(completion: @escaping (Result<[ENExposureWindow], Error>) -> Void) {
         
-        let urls = Server.shared.urls
+        guard let diagnosisKeyURL = Server.shared.diagnosisKeyURL else {
+            return
+        }
+        
         // get config
         Server.shared.getExposureConfiguration { result in
             
             switch result {
             case let .success(configuration):
+   
+                ExposureManager.shared.manager.detectExposures(configuration: configuration, diagnosisKeyURLs: [diagnosisKeyURL]) { summary, error in
+                    
+                    if let error = error {
+                        completion(.failure(error))
+                        return
+                    }
+                    
+                    ExposureManager.shared.manager.getExposureWindows(summary: summary!) { (exposureWindows, error) in
+                        if let error = error {
+                            completion(.failure(error))
+                            return
+                        }
+
+                        completion(.success(exposureWindows ?? []))
+                    }
+                }
                 
-                // detect exposures based on downloaded keys and configuration
-                self.detectExposures(configuration: configuration, urls: urls, completion: completion)
-                break;
             case let .failure(error):
                 completion(.failure(error))
-                return
-                
             }
         }
     }
     
-    private func detectExposures(configuration: ENExposureConfiguration, urls: [URL], completion: @escaping (Result<[ENExposureInfo]?, Error>) -> Void) {
-        ExposureManager.shared.manager.detectExposures(configuration: configuration, diagnosisKeyURLs: urls) { summary, error in
-            if let error = error {
-                completion(.failure(error))
-                return
-            }
-            
-            ExposureManager.shared.manager.getExposureInfo(summary: summary!, userExplanation: "") { (info, error) in
-                if let error = error {
-                    completion(.failure(error))
-                    return
-                }
-
-                completion(.success(info))
-            }
-        }
-    }
-    
-    func getAndPostDiagnosisKeys(completion: @escaping (Result<[ENTemporaryExposureKey], Error>) -> Void) {
+    /// Gets special testdiagnosiskeys from the EN framework. These keys are special because they do not require a 24 hour waiting period to be released.
+    func getTestDiagnosisKeys(completion: @escaping (Result<[ENTemporaryExposureKey], Error>) -> Void) {
         manager.getTestDiagnosisKeys { temporaryExposureKeys, error in
             if let error = error {
                 completion(.failure(error))
             } else {
-                guard let keys = temporaryExposureKeys else {
-                    return
-                }
-                completion(.success(keys))
+                completion(.success(temporaryExposureKeys ?? []))
             }
         }
     }
